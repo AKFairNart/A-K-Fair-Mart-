@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -455,7 +454,7 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 <script>
 "use strict";
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
+const SUPABASE_KEY = "sb_publishable_gwBu5OE9Ue351h24aM75Q_C-W6L1ch";
 // Add the administrator login email here to enable admin deletion of every listing.
 const ADMIN_EMAILS = [];
 let db = null;
@@ -766,41 +765,49 @@ function setLanguage(lang){
   document.documentElement.lang=ur?"ur":"en";
   document.documentElement.dir=ur?"rtl":"ltr";
   document.body.classList.toggle("urdu-mode",ur);
-  document.getElementById("englishBtn").classList.toggle("active",!ur);
-  document.getElementById("urduBtn").classList.toggle("active",ur);
+
+  // Safe DOM helpers: a missing optional label must never stop the whole website.
+  const byId=(id)=>document.getElementById(id);
+  const setText=(selector,value)=>{const el=document.querySelector(selector);if(el)el.textContent=value;};
+  const setPlaceholder=(id,value)=>{const el=byId(id);if(el)el.placeholder=value;};
+  const englishBtn=byId("englishBtn"),urduBtn=byId("urduBtn");
+  if(englishBtn)englishBtn.classList.toggle("active",!ur);
+  if(urduBtn)urduBtn.classList.toggle("active",ur);
+
   const text={
-    en:{language:"Language / زبان",role:"Continue as / منتخب کریں",buyer:"🛍️ Buyer",seller:"🏪 Seller",hero:"Buy Smart. Sell Fair.",search:"Search | تلاش کریں",categories:"Explore Categories",ads:"Latest Advertisements",post:"Post Your Advertisement",login:"Login / Sign Up",nav:["Home | ہوم","Categories | کیٹیگریز","Ads | اشتہارات","Account | اکاؤنٹ"],welcome:"Welcome to A&K Fair Mart",loginHint:"Login or create your account using your email address.",create:"Create Account",loginBtn:"Login",logout:"Logout",postHint:"Share the details of the item you want to sell.",sellerTitle:"Seller Details / فروخت کنندہ کی تفصیل",submit:"Submit Advertisement",catHint:"اپنی پسند کی کیٹیگری منتخب کریں",latestUr:"تازہ ترین اشتہارات",titlePh:"Ad title / اشتہار کا عنوان",descPh:"Description / تفصیل",pricePh:"Price in PKR",locationPh:"City / Location",namePh:"Seller full name / فروخت کنندہ کا نام",mobilePh:"Mobile number / موبائل نمبر",addressPh:"Full address / مکمل پتہ",searchPh:"Search products, cars, property... / تلاش کریں"},
-    ur:{language:"زبان منتخب کریں",role:"اپنا کردار منتخب کریں",buyer:"🛍️ خریدار",seller:"🏪 فروخت کنندہ",hero:"سمجھداری سے خریدیں، منصفانہ فروخت کریں",search:"تلاش کریں",categories:"کیٹیگریز دیکھیں",ads:"تازہ ترین اشتہارات",post:"اپنا اشتہار دیں",login:"لاگ اِن / اکاؤنٹ بنائیں",nav:["ہوم","کیٹیگریز","اشتہارات","اکاؤنٹ"],welcome:"A&K فیئر مارٹ میں خوش آمدید",loginHint:"ای میل کے ذریعے لاگ اِن کریں یا نیا اکاؤنٹ بنائیں۔",create:"اکاؤنٹ بنائیں",loginBtn:"لاگ اِن",logout:"لاگ آؤٹ",postHint:"فروخت کے لیے اپنی چیز کی تفصیلات درج کریں۔",sellerTitle:"فروخت کنندہ کی تفصیل",submit:"اشتہار جمع کروائیں",catHint:"اپنی پسند کی کیٹیگری منتخب کریں",latestUr:"تازہ ترین اشتہارات",titlePh:"اشتہار کا عنوان",descPh:"تفصیل",pricePh:"قیمت پاکستانی روپے میں",locationPh:"شہر / مقام",namePh:"فروخت کنندہ کا پورا نام",mobilePh:"موبائل نمبر",addressPh:"مکمل پتہ",searchPh:"اشیاء، گاڑیاں یا پراپرٹی تلاش کریں"}
+    en:{language:"Language / زبان",role:"Continue as / منتخب کریں",buyer:"🛍️ Buyer",seller:"🏪 Seller",hero:"Buy Smart. Sell Fair.",search:"Search | تلاش کریں",categories:"Explore Categories",ads:"Latest Advertisements",post:"Post Your Advertisement",login:"Login / Sign Up",nav:["Home | ہوم","Categories | کیٹیگریز","Ads | اشتہارات","Account | اکاؤنٹ"],welcome:"Welcome Back",loginHint:"Sign in or create your account using your email address.",create:"New to A&K? Create Account",loginBtn:"⇥  SIGN IN",logout:"Logout",postHint:"Share the details of the item you want to sell.",sellerTitle:"Seller Details / فروخت کنندہ کی تفصیل",submit:"Submit Advertisement",catHint:"اپنی پسند کی کیٹیگری منتخب کریں",latestUr:"تازہ ترین اشتہارات",titlePh:"Ad title / اشتہار کا عنوان",descPh:"Description / تفصیل",pricePh:"Price in PKR",locationPh:"City / Location",namePh:"Seller full name / فروخت کنندہ کا نام",mobilePh:"Mobile number / موبائل نمبر",addressPh:"Full address / مکمل پتہ",searchPh:"Search products, cars, property... / تلاش کریں"},
+    ur:{language:"زبان منتخب کریں",role:"اپنا کردار منتخب کریں",buyer:"🛍️ خریدار",seller:"🏪 فروخت کنندہ",hero:"سمجھداری سے خریدیں، منصفانہ فروخت کریں",search:"تلاش کریں",categories:"کیٹیگریز دیکھیں",ads:"تازہ ترین اشتہارات",post:"اپنا اشتہار دیں",login:"لاگ اِن / اکاؤنٹ بنائیں",nav:["ہوم","کیٹیگریز","اشتہارات","اکاؤنٹ"],welcome:"خوش آمدید",loginHint:"ای میل کے ذریعے لاگ اِن کریں یا نیا اکاؤنٹ بنائیں۔",create:"نیا اکاؤنٹ بنائیں",loginBtn:"لاگ اِن کریں",logout:"لاگ آؤٹ",postHint:"فروخت کے لیے اپنی چیز کی تفصیلات درج کریں۔",sellerTitle:"فروخت کنندہ کی تفصیل",submit:"اشتہار جمع کروائیں",catHint:"اپنی پسند کی کیٹیگری منتخب کریں",latestUr:"تازہ ترین اشتہارات",titlePh:"اشتہار کا عنوان",descPh:"تفصیل",pricePh:"قیمت پاکستانی روپے میں",locationPh:"شہر / مقام",namePh:"فروخت کنندہ کا پورا نام",mobilePh:"موبائل نمبر",addressPh:"مکمل پتہ",searchPh:"اشیاء، گاڑیاں یا پراپرٹی تلاش کریں"}
   }[currentLanguage];
-  document.getElementById("languageLabel").textContent=text.language;
-  document.getElementById("roleLabel").textContent=text.role;
-  document.getElementById("buyerBtn").textContent=text.buyer;
-  document.getElementById("sellerBtn").textContent=text.seller;
+
+  setText("#languageLabel",text.language);
+  setText("#roleLabel",text.role);
+  setText("#buyerBtn",text.buyer);
+  setText("#sellerBtn",text.seller);
   const heroHeading=document.querySelector(".hero-copy h2");
-  if(heroHeading){
-    if(ur)heroHeading.textContent=text.hero;
-    else heroHeading.innerHTML='Buy Smart. <span>Sell Fair.</span>';
-  }
-  document.querySelector(".searchrow .btn").textContent=text.search;
-  document.querySelector("#categories .section-head h2").textContent=text.categories;
-  document.querySelector("#listings .section-head h2").textContent=text.ads;
-  document.querySelector("#postAd .formbox h2").textContent=text.post;
-  document.querySelector(".hero-actions .btn.teal").textContent=text.login;
-  document.querySelector(".hero-actions .btn:not(.teal)").textContent=ur?"＋ اپنا اشتہار دیں":"＋ Post Your Ad | اشتہار دیں";
-  document.querySelector("#account .formbox h2").textContent=text.welcome;
-  document.querySelector("#account .hint").textContent=text.loginHint;
-  const accountButtons=document.querySelectorAll("#account .formbox button");
-  accountButtons[0].textContent=text.create;accountButtons[1].textContent=text.loginBtn;
-  accountButtons[2].textContent=ur?"پاس ورڈ بھول گئے؟":"Forgot Password? / پاس ورڈ بھول گئے؟";
-  accountButtons[3].textContent=text.logout;
-  document.querySelector("#postAd .hint").textContent=text.postHint;
-  document.querySelector(".seller-details h3").textContent=text.sellerTitle;
-  document.getElementById("submitAdButton").textContent=text.submit;
+  if(heroHeading){if(ur)heroHeading.textContent=text.hero;else heroHeading.innerHTML='Buy Smart. <span>Sell Fair.</span>';}
+  setText(".searchrow .btn",text.search);
+  setText("#categories .section-head h2",text.categories);
+  setText("#listings .section-head h2",text.ads);
+  setText("#postAd .formbox h2",text.post);
+  setText(".hero-actions .btn.teal",text.login);
+  setText(".hero-actions .btn:not(.teal)",ur?"＋ اپنا اشتہار دیں":"＋ Post Your Ad | اشتہار دیں");
+  // The current account design uses #authWelcome and .auth-subtitle, not the retired .formbox selectors.
+  setText("#authWelcome",text.welcome);
+  setText(".auth-subtitle",ur?"جاری رکھنے کے لیے لاگ اِن کریں":"Sign in to continue");
+  const createBtn=document.querySelector(".auth-create");
+  if(createBtn)createBtn.innerHTML=ur?"نئے صارف ہیں؟ <b>اکاؤنٹ بنائیں</b> <strong>›</strong>":"New to A&amp;K? <b>Create Account</b> <strong>›</strong>";
+  const signInBtn=document.querySelector(".auth-primary");
+  if(signInBtn && !signInBtn.closest("#resetPanel"))signInBtn.textContent=ur?"⇥  لاگ اِن":"⇥  SIGN IN";
+  const forgotBtn=document.querySelector(".auth-forgot");if(forgotBtn)forgotBtn.textContent=ur?"پاس ورڈ بھول گئے؟":"Forgot Password?";
+  const logoutBtn=document.querySelector(".auth-logout");if(logoutBtn)logoutBtn.textContent=text.logout;
+  setText("#postAd .hint",text.postHint);
+  setText(".seller-details h3",text.sellerTitle);
+  const submitBtn=byId("submitAdButton");if(submitBtn && editingAdId===null)submitBtn.textContent=text.submit;
   const nav=document.querySelectorAll("nav a");nav.forEach((a,i)=>{if(text.nav[i])a.textContent=text.nav[i];});
   const placeholders={searchBox:text.searchPh,adTitle:text.titlePh,adDescription:text.descPh,adPrice:text.pricePh,adLocation:text.locationPh,sellerName:text.namePh,sellerMobile:text.mobilePh,sellerAddress:text.addressPh};
-  Object.entries(placeholders).forEach(([id,value])=>document.getElementById(id).placeholder=value);
-  document.querySelector("#categories .section-head p").textContent=text.catHint;
-  document.querySelector("#listings .section-head p").textContent=text.latestUr;
+  Object.entries(placeholders).forEach(([id,value])=>setPlaceholder(id,value));
+  setText("#categories .section-head p",text.catHint);
+  setText("#listings .section-head p",text.latestUr);
   document.querySelectorAll("#account input,#postAd input,#postAd textarea,#postAd select").forEach(el=>el.dir=ur?"rtl":"ltr");
   document.querySelectorAll(".urdu,.brandurdu").forEach(el=>el.dir="rtl");
 }

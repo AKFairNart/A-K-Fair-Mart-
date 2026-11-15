@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -484,12 +483,11 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 <script>
 "use strict";
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxxdW9ubHV6eHVpdnZ6cmRpaXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMDEyMjUsImV4cCI6MjEwOTc3NzIyNX0.Ki16VGE07-OkwKWIsRMOHV-qx8yQQ5Q1No1Cu5Px0v0";
+const SUPABASE_KEY = "sb_publishable_gwBu5OE9Ue351h24aM75Q_C-W6L1ch";
 // Add the administrator login email here to enable admin deletion of every listing.
 const ADMIN_EMAILS = [];
-// Offers are sent to a secure Supabase Edge Function. Deploy "submit-offer" and
-// configure its server-side WhatsApp/Gmail secrets before enabling live alerts.
-const OFFER_FUNCTION_NAME = "submit-offer";
+// Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
+// require a server-side function and are intentionally not claimed as active yet.
 let db = null;
 let currentUser = null;
 let allAds = [];
@@ -768,14 +766,28 @@ async function submitOffer(event){
   if(!payload.buyer_name||!payload.buyer_mobile||!Number.isFinite(payload.offer_price)||payload.offer_price<=0){setStatus("Please enter your name, mobile number and a valid offer price.");return;}
   if(button){button.disabled=true;button.textContent="Sending...";}
   try{
-    const {data,error}=await db.functions.invoke(OFFER_FUNCTION_NAME,{body:payload});
+    // Public visitors can submit an offer; RLS permits INSERT only. No public
+    // SELECT policy is created, so private buyer details are not exposed.
+    const {error}=await db.from("offers").insert({
+      listing_id:payload.listing_id,
+      listing_title:payload.listing_title,
+      listed_price:payload.listed_price,
+      offer_price:payload.offer_price,
+      buyer_name:payload.buyer_name,
+      buyer_mobile:payload.buyer_mobile,
+      message:payload.message,
+      role:payload.role,
+      source:payload.source,
+      status:"new"
+    });
     if(error)throw error;
-    if(data&&data.ok===false)throw new Error(data.message||"Offer could not be submitted.");
-    setStatus("Your offer has been submitted. The admin notification service accepted it.");
+    setStatus("Your offer has been received successfully. A&K Fair Mart admin will contact you.");
     const form=document.getElementById("offerForm");if(form)form.reset();
+    setTimeout(closeOffer,1800);
   }catch(error){
     console.error("Offer submission error:",error);
-    setStatus("Offer service is not configured yet. Your offer was NOT sent. Please contact the site admin after setup.");
+    const detail=(error&&error.message)?error.message:"Unknown database error";
+    setStatus("Offer was not saved: "+detail+". Please contact the site admin.");
   }finally{if(button){button.disabled=false;button.textContent="Send Offer";}}
 }
 

@@ -467,22 +467,29 @@ let editingAdId = null;
 
 function setRole(role){
   currentRole=role;
-  document.getElementById("buyerBtn").classList.toggle("active",role==="buyer");
-  document.getElementById("sellerBtn").classList.toggle("active",role==="seller");
+  const buyerBtn=document.getElementById("buyerBtn");
+  const sellerBtn=document.getElementById("sellerBtn");
+  if(buyerBtn)buyerBtn.classList.toggle("active",role==="buyer");
+  if(sellerBtn)sellerBtn.classList.toggle("active",role==="seller");
   if(role==="seller"){
     if(currentUser)openPost();
     else {showAccount();message("accountMessage","Please login or create an account to continue as a seller.","#b42318");}
   } else {
-    document.getElementById("listings").scrollIntoView({behavior:"smooth"});
+    const listings=document.getElementById("listings");
+    if(listings)listings.scrollIntoView({behavior:"smooth"});
   }
 }
 
 function chooseAuthRole(role){
   currentRole=role;
-  document.getElementById("authBuyerBtn").classList.toggle("selected",role==="buyer");
-  document.getElementById("authSellerBtn").classList.toggle("selected",role==="seller");
-  document.getElementById("buyerBtn").classList.toggle("active",role==="buyer");
-  document.getElementById("sellerBtn").classList.toggle("active",role==="seller");
+  const authBuyer=document.getElementById("authBuyerBtn");
+  const authSeller=document.getElementById("authSellerBtn");
+  const buyer=document.getElementById("buyerBtn");
+  const seller=document.getElementById("sellerBtn");
+  if(authBuyer)authBuyer.classList.toggle("selected",role==="buyer");
+  if(authSeller)authSeller.classList.toggle("selected",role==="seller");
+  if(buyer)buyer.classList.toggle("active",role==="buyer");
+  if(seller)seller.classList.toggle("active",role==="seller");
 }
 
 function message(id, text, color="#172b45"){
@@ -499,7 +506,7 @@ function showAccount(){
 }
 function updateUser(){
   const status=document.getElementById("userStatus");
-  status.textContent=currentUser ? "Logged in: "+currentUser.email : "You are browsing as a guest. Login to post an ad.";
+  if(status)status.textContent=currentUser ? "Logged in: "+(currentUser.email||"Account") : "You are browsing as a guest. Login to post an ad.";
 }
 async function loadCategories(){
   const grid=document.getElementById("categoryGrid");
@@ -727,9 +734,11 @@ function showAds(){
 }
 async function start(){
   try{
-    document.getElementById("year").textContent=new Date().getFullYear();
+    const yearEl=document.getElementById("year");
+    if(yearEl)yearEl.textContent=new Date().getFullYear();
     setLanguage("en");
-    document.getElementById("searchBox").addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
+    const searchBox=document.getElementById("searchBox");
+    if(searchBox)searchBox.addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
     if(!window.supabase){
       message("userStatus","Supabase library did not load. Check your internet connection and refresh the page.","#b42318");
       document.getElementById("adsGrid").innerHTML='<p class="empty">Website connection library could not load. Please check your internet connection.</p>';
@@ -743,7 +752,8 @@ async function start(){
     db.auth.onAuthStateChange((event,session)=>{
       currentUser=session?session.user:null;updateUser();
       if(event==="PASSWORD_RECOVERY"){
-        document.getElementById("resetPanel").style.display="block";
+        const resetPanel=document.getElementById("resetPanel");
+        if(resetPanel)resetPanel.style.display="block";
         showAccount();
         message("accountMessage","Enter and save your new password below.","#12816f");
       }
@@ -752,8 +762,10 @@ async function start(){
   }catch(error){
     console.error("A&K Fair Mart initialization failed:",error);
     message("userStatus","Website connection error: "+(error.message||String(error)),"#b42318");
-    document.getElementById("categoryGrid").innerHTML='<div class="empty">Could not connect to the marketplace database. Please refresh and try again.</div>';
-    document.getElementById("adsGrid").innerHTML='<div class="empty">Advertisements could not be loaded. Please refresh and try again.</div>';
+    const categoryGrid=document.getElementById("categoryGrid");
+    const adsGrid=document.getElementById("adsGrid");
+    if(categoryGrid)categoryGrid.innerHTML='<div class="empty">Could not connect to the marketplace database. Please refresh and try again.</div>';
+    if(adsGrid)adsGrid.innerHTML='<div class="empty">Advertisements could not be loaded. Please refresh and try again.</div>';
   }
 }
 start();

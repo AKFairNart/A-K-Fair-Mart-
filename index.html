@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -286,6 +287,19 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 @media(max-width:480px){.nexus-account-section{padding:30px 10px}.nexus-auth-card{padding:28px 17px 21px;border-radius:22px}.nexus-auth-card h2{font-size:25px}.auth-emblem{width:125px;height:125px}.auth-emblem span{font-size:42px}.auth-product-strip div{width:calc(50% - 6px)}.auth-benefits span{font-size:9px;padding:8px}}
 @media(prefers-reduced-motion:reduce){.auth-emblem:before{animation:none}}
 
+
+/* BUYER OFFER + ADMIN ALERT READY INTERFACE */
+.offer-btn{width:100%;margin-top:10px;background:linear-gradient(110deg,#08a9c5,#1267c5);color:#fff;border:0;border-radius:12px;padding:11px;font-weight:900;box-shadow:0 7px 18px #087dc533}
+.offer-modal{display:none;position:fixed;inset:0;z-index:1000;background:#061426c9;backdrop-filter:blur(8px);padding:18px;overflow:auto;align-items:center;justify-content:center}
+.offer-modal.open{display:flex}
+.offer-dialog{width:min(100%,520px);background:#071d38;color:#f4fbff;border:1px solid #51dce8a8;border-radius:22px;padding:23px;box-shadow:0 25px 80px #000b}
+.offer-dialog h2{margin:0 0 7px;color:#ffe08a}.offer-dialog p{color:#c5dfed;font-size:13px}
+.offer-dialog label{display:block;text-align:left;font-size:12px;font-weight:800;color:#bfeef5;margin-top:10px}
+.offer-dialog input,.offer-dialog textarea{background:#03142b;color:#fff;border:1px solid #5d9eb577}
+.offer-dialog .offer-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.offer-dialog .offer-actions button{flex:1;min-width:120px}
+.offer-dialog .offer-close{background:transparent;border:1px solid #8db8cc;color:#eaf8ff;border-radius:10px;padding:10px}
+.offer-status{min-height:20px;font-size:12px;color:#a8f4dd;margin-top:10px}
+
 </style>
 </head>
 <body>
@@ -442,6 +456,22 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 </section>
 </main>
 
+
+<div class="offer-modal" id="offerModal" role="dialog" aria-modal="true" aria-labelledby="offerHeading">
+  <div class="offer-dialog">
+    <h2 id="offerHeading">Make an Offer | آفر دیں</h2>
+    <p id="offerListingSummary">Send your offer to A&amp;K Fair Mart. Your contact details stay private from public visitors.</p>
+    <form id="offerForm" onsubmit="submitOffer(event)">
+      <label for="offerName">Your full name</label><input id="offerName" required maxlength="100" autocomplete="name" placeholder="Enter your name">
+      <label for="offerMobile">Mobile / WhatsApp number</label><input id="offerMobile" required maxlength="25" inputmode="tel" autocomplete="tel" placeholder="03xx xxxxxxx">
+      <label for="offerPrice">Your offer price (PKR)</label><input id="offerPrice" type="number" min="1" step="1" required placeholder="Enter your offer">
+      <label for="offerNote">Message (optional)</label><textarea id="offerNote" rows="3" maxlength="1000" placeholder="Add a short message"></textarea>
+      <div class="offer-actions"><button class="btn teal" id="sendOfferButton" type="submit">Send Offer</button><button class="offer-close" type="button" onclick="closeOffer()">Cancel</button></div>
+      <div class="offer-status" id="offerStatus" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
 <footer>
   <h3>A&amp;K FAIR MART</h3>
   <p>By Ammar &amp; Khalid</p>
@@ -457,6 +487,9 @@ const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gwBu5OE9Ue351h24aM75Q_C-W6L1ch";
 // Add the administrator login email here to enable admin deletion of every listing.
 const ADMIN_EMAILS = [];
+// Offers are sent to a secure Supabase Edge Function. Deploy "submit-offer" and
+// configure its server-side WhatsApp/Gmail secrets before enabling live alerts.
+const OFFER_FUNCTION_NAME = "submit-offer";
 let db = null;
 let currentUser = null;
 let allAds = [];
@@ -467,29 +500,20 @@ let editingAdId = null;
 
 function setRole(role){
   currentRole=role;
-  const buyerBtn=document.getElementById("buyerBtn");
-  const sellerBtn=document.getElementById("sellerBtn");
-  if(buyerBtn)buyerBtn.classList.toggle("active",role==="buyer");
-  if(sellerBtn)sellerBtn.classList.toggle("active",role==="seller");
+  const buyerButton=document.getElementById("buyerBtn"),sellerButton=document.getElementById("sellerBtn");
+  if(buyerButton)buyerButton.classList.toggle("active",role==="buyer");
+  if(sellerButton)sellerButton.classList.toggle("active",role==="seller");
   if(role==="seller"){
     if(currentUser)openPost();
     else {showAccount();message("accountMessage","Please login or create an account to continue as a seller.","#b42318");}
   } else {
-    const listings=document.getElementById("listings");
-    if(listings)listings.scrollIntoView({behavior:"smooth"});
+    document.getElementById("listings").scrollIntoView({behavior:"smooth"});
   }
 }
 
 function chooseAuthRole(role){
   currentRole=role;
-  const authBuyer=document.getElementById("authBuyerBtn");
-  const authSeller=document.getElementById("authSellerBtn");
-  const buyer=document.getElementById("buyerBtn");
-  const seller=document.getElementById("sellerBtn");
-  if(authBuyer)authBuyer.classList.toggle("selected",role==="buyer");
-  if(authSeller)authSeller.classList.toggle("selected",role==="seller");
-  if(buyer)buyer.classList.toggle("active",role==="buyer");
-  if(seller)seller.classList.toggle("active",role==="seller");
+  [ ["authBuyerBtn",role==="buyer","selected"],["authSellerBtn",role==="seller","selected"],["buyerBtn",role==="buyer","active"],["sellerBtn",role==="seller","active"] ].forEach(([id,on,cls])=>{const el=document.getElementById(id);if(el)el.classList.toggle(cls,on);});
 }
 
 function message(id, text, color="#172b45"){
@@ -501,16 +525,18 @@ function showError(id,error){
   message(id,error && error.message ? error.message : String(error),"#b42318");
 }
 function showAccount(){
-  document.getElementById("account").style.display="block";
-  document.getElementById("account").scrollIntoView({behavior:"smooth"});
+  const account=document.getElementById("account");
+  if(!account){console.warn("Account panel is missing.");return;}
+  account.style.display="block";account.scrollIntoView({behavior:"smooth"});
 }
 function updateUser(){
   const status=document.getElementById("userStatus");
-  if(status)status.textContent=currentUser ? "Logged in: "+(currentUser.email||"Account") : "You are browsing as a guest. Login to post an ad.";
+  if(status) status.textContent=currentUser ? "Logged in: "+(currentUser.email||"account") : "You are browsing as a guest. Login to post an ad.";
 }
 async function loadCategories(){
   const grid=document.getElementById("categoryGrid");
   const select=document.getElementById("adCategory");
+  if(!grid||!select) throw new Error("Marketplace category area is missing from the page.");
   const {data,error}=await db.from("categories").select("*").order("id",{ascending:true});
   if(error){grid.innerHTML='<div class="empty">Categories could not be loaded: '+escapeHtml(error.message)+'</div>';return;}
   allCategories=data||[];
@@ -666,6 +692,7 @@ function cancelEdit(silent=false){
 
 async function loadAds(){
   const grid=document.getElementById("adsGrid");
+  if(!grid) throw new Error("Advertisement display area is missing from the page.");
   const {data,error}=await db.from("listing").select("*").eq("status","active").order("created_at",{ascending:false});
   if(error){grid.innerHTML='<div class="empty">Advertisements could not be loaded: '+escapeHtml(error.message)+'</div>';return;}
   allAds=data||[];
@@ -673,6 +700,7 @@ async function loadAds(){
 }
 function renderAds(ads){
   const grid=document.getElementById("adsGrid");
+  if(!grid) return;
   grid.innerHTML="";
   if(!ads.length){grid.innerHTML='<div class="empty">No advertisements found. Be the first to post one!</div>';return;}
   ads.forEach(ad=>{
@@ -695,6 +723,7 @@ function renderAds(ads){
     desc.textContent=ad.description||"";card.appendChild(desc);
     const loc=document.createElement("p");
     loc.className="small";loc.textContent="📍 "+(ad.locations||"Location not specified");card.appendChild(loc);
+    const offerButton=document.createElement("button");offerButton.type="button";offerButton.className="offer-btn";offerButton.textContent="💬 Make an Offer / آفر دیں";offerButton.onclick=()=>openOffer(ad);card.appendChild(offerButton);
     const isAdmin=currentUser && ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser.email||"").toLowerCase());
     if(currentUser && (ad.user_id===currentUser.id || isAdmin)){
       const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px";
@@ -717,6 +746,39 @@ async function deleteAd(adId,ownerId){
   message("postMessage","Advertisement deleted successfully.","#12816f");
   await loadAds();
 }
+
+let selectedOfferListing=null;
+function openOffer(ad){
+  selectedOfferListing=ad;
+  const modal=document.getElementById("offerModal"),summary=document.getElementById("offerListingSummary"),status=document.getElementById("offerStatus");
+  if(!modal||!summary)return;
+  summary.textContent="Offer for: "+(ad.listing_tittle||"Advertisement")+" | Listed price: Rs. "+Number(ad.price||0).toLocaleString("en-PK");
+  if(status)status.textContent="";
+  modal.classList.add("open");
+  const first=document.getElementById("offerName");if(first)first.focus();
+}
+function closeOffer(){const modal=document.getElementById("offerModal");if(modal)modal.classList.remove("open");selectedOfferListing=null;}
+async function submitOffer(event){
+  if(event)event.preventDefault();
+  const status=document.getElementById("offerStatus"),button=document.getElementById("sendOfferButton");
+  const setStatus=(msg)=>{if(status)status.textContent=msg;};
+  if(!selectedOfferListing){setStatus("Please select an advertisement first.");return;}
+  if(!db){setStatus("Website is not connected. Please refresh and try again.");return;}
+  const payload={listing_id:selectedOfferListing.id,listing_title:selectedOfferListing.listing_tittle||"",listed_price:selectedOfferListing.price??null,offer_price:Number(document.getElementById("offerPrice").value),buyer_name:document.getElementById("offerName").value.trim(),buyer_mobile:document.getElementById("offerMobile").value.trim(),message:document.getElementById("offerNote").value.trim(),role:currentRole||"buyer",source:"A&K Fair Mart"};
+  if(!payload.buyer_name||!payload.buyer_mobile||!Number.isFinite(payload.offer_price)||payload.offer_price<=0){setStatus("Please enter your name, mobile number and a valid offer price.");return;}
+  if(button){button.disabled=true;button.textContent="Sending...";}
+  try{
+    const {data,error}=await db.functions.invoke(OFFER_FUNCTION_NAME,{body:payload});
+    if(error)throw error;
+    if(data&&data.ok===false)throw new Error(data.message||"Offer could not be submitted.");
+    setStatus("Your offer has been submitted. The admin notification service accepted it.");
+    const form=document.getElementById("offerForm");if(form)form.reset();
+  }catch(error){
+    console.error("Offer submission error:",error);
+    setStatus("Offer service is not configured yet. Your offer was NOT sent. Please contact the site admin after setup.");
+  }finally{if(button){button.disabled=false;button.textContent="Send Offer";}}
+}
+
 function filterCategory(categoryId){
   const filtered=allAds.filter(ad=>String(ad.caterory_id)===String(categoryId));
   renderAds(filtered);
@@ -734,14 +796,12 @@ function showAds(){
 }
 async function start(){
   try{
-    const yearEl=document.getElementById("year");
-    if(yearEl)yearEl.textContent=new Date().getFullYear();
+    const year=document.getElementById("year");if(year)year.textContent=new Date().getFullYear();
     setLanguage("en");
-    const searchBox=document.getElementById("searchBox");
-    if(searchBox)searchBox.addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
+    const searchBox=document.getElementById("searchBox");if(searchBox)searchBox.addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
     if(!window.supabase){
       message("userStatus","Supabase library did not load. Check your internet connection and refresh the page.","#b42318");
-      document.getElementById("adsGrid").innerHTML='<p class="empty">Website connection library could not load. Please check your internet connection.</p>';
+      const adsGrid=document.getElementById("adsGrid");if(adsGrid)adsGrid.innerHTML='<p class="empty">Website connection library could not load. Please check your internet connection.</p>';
       return;
     }
     db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -752,8 +812,7 @@ async function start(){
     db.auth.onAuthStateChange((event,session)=>{
       currentUser=session?session.user:null;updateUser();
       if(event==="PASSWORD_RECOVERY"){
-        const resetPanel=document.getElementById("resetPanel");
-        if(resetPanel)resetPanel.style.display="block";
+        const resetPanel=document.getElementById("resetPanel");if(resetPanel)resetPanel.style.display="block";
         showAccount();
         message("accountMessage","Enter and save your new password below.","#12816f");
       }
@@ -762,8 +821,7 @@ async function start(){
   }catch(error){
     console.error("A&K Fair Mart initialization failed:",error);
     message("userStatus","Website connection error: "+(error.message||String(error)),"#b42318");
-    const categoryGrid=document.getElementById("categoryGrid");
-    const adsGrid=document.getElementById("adsGrid");
+    const categoryGrid=document.getElementById("categoryGrid"),adsGrid=document.getElementById("adsGrid");
     if(categoryGrid)categoryGrid.innerHTML='<div class="empty">Could not connect to the marketplace database. Please refresh and try again.</div>';
     if(adsGrid)adsGrid.innerHTML='<div class="empty">Advertisements could not be loaded. Please refresh and try again.</div>';
   }
@@ -825,5 +883,9 @@ function setLanguage(lang){
 }
 
 </script>
+<!-- ALERT SETUP NOTE: The front-end calls Supabase Edge Function "submit-offer".
+     Until that secure function is deployed with WhatsApp Business Platform and email-provider
+     credentials stored as Supabase Secrets, offer submission will clearly report not configured.
+     Never place WhatsApp access tokens, Gmail passwords, or provider API keys in this HTML. -->
 </body>
 </html>

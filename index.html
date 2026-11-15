@@ -1,4 +1,6 @@
-F<!DOCTYPE html>
+
+100%
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -280,7 +282,7 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 .auth-primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
 .auth-or{display:flex;align-items:center;gap:12px;margin:19px 0;color:#d8e8f4;font-size:12px;font-weight:800}.auth-or span{height:1px;flex:1;background:#a6cce566}
 .auth-create{border:0;background:transparent;color:#e5f4ff;font-size:13px}.auth-create b{color:#ffdc67;text-decoration:underline;margin:0 5px}.auth-create strong{color:#ffdc67;font-size:23px;vertical-align:-2px}
-.auth-reset{margin-top:15px;padding:13px;border:1px solid #75dff477;border-radius:15px;background:#061a35}.auth-reset p{font-size:12px;color:#d3eaf5}.auth-logout{margin-top:13px;border:0;background:transparent;color:#b8d7e7;font-size:11px;text-decoration:underline}.auth-privacy{font-size:10px;color:#a7c9d9;margin:15px 0 0}.nexus-auth-card .notice{color:#fff;position:relative;z-index:2}
+.auth-reset{margin-top:15px;padding:13px;border:1px solid #75dff477;border-radius:15px;background:#061a35}.auth-reset p{font-size:12px;color:#d3eaf5}.auth-social-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.auth-social{border:1px solid #8bdcf477;border-radius:13px;padding:12px 5px;background:#092747;color:#fff;font-size:12px;font-weight:850;cursor:pointer}.auth-social:hover{background:#10436d;transform:translateY(-1px)}.auth-phone-box{margin-top:13px;padding:13px;border:1px solid #75dff477;border-radius:15px;background:#061a35;text-align:left}.auth-phone-box p{font-size:12px;color:#d3eaf5;margin:0 0 8px}.auth-phone-box input{width:100%;box-sizing:border-box;border:1px solid #8bc7e788;border-radius:10px;padding:12px;margin:5px 0;background:#03152e;color:#fff}.auth-phone-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px}.auth-phone-actions button{border:1px solid #58d9f4;border-radius:10px;padding:10px 5px;background:#0b5680;color:#fff;font-size:11px;font-weight:800}.auth-logout{margin-top:13px;border:0;background:transparent;color:#b8d7e7;font-size:11px;text-decoration:underline}.auth-privacy{font-size:10px;color:#a7c9d9;margin:15px 0 0}.nexus-auth-card .notice{color:#fff;position:relative;z-index:2}
 @keyframes authOrbit{to{transform:rotate(360deg)}}
 @media(max-width:800px){.nexus-auth-shell{grid-template-columns:1fr;gap:42px;max-width:560px}.nexus-auth-showcase{text-align:center;padding:18px 8px}.auth-emblem{margin:25px auto}.auth-product-strip,.auth-benefits{justify-content:center}.nexus-auth-card{margin-top:8px}}
 @media(max-width:480px){.nexus-account-section{padding:30px 10px}.nexus-auth-card{padding:28px 17px 21px;border-radius:22px}.nexus-auth-card h2{font-size:25px}.auth-emblem{width:125px;height:125px}.auth-emblem span{font-size:42px}.auth-product-strip div{width:calc(50% - 6px)}.auth-benefits span{font-size:9px;padding:8px}}
@@ -298,6 +300,38 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 .offer-dialog .offer-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.offer-dialog .offer-actions button{flex:1;min-width:120px}
 .offer-dialog .offer-close{background:transparent;border:1px solid #8db8cc;color:#eaf8ff;border-radius:10px;padding:10px}
 .offer-status{min-height:20px;font-size:12px;color:#a8f4dd;margin-top:10px}
+
+
+.property-fields{display:none;margin:14px 0;padding:16px;border:1px solid #d9e6ed;border-radius:18px;background:linear-gradient(145deg,#f7fbff,#eef7f7);box-shadow:0 10px 25px #12334b0c}
+.property-fields h3{margin:0 0 6px;color:#12334b;font-size:17px}
+.property-fields .property-note{font-size:12px;color:#607587;margin:0 0 12px}
+.property-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.property-grid label{display:block;font-size:12px;font-weight:700;color:#39566b;margin-bottom:4px}
+.property-grid input,.property-grid select{width:100%;min-width:0}
+.property-checks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.property-checks label{display:flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid #d5e2e8;border-radius:999px;background:#fff;font-size:12px;font-weight:600}
+.property-checks input{width:auto}
+@media(max-width:520px){.property-grid{grid-template-columns:1fr}}
+
+
+/* TEN-CATEGORY SLOW ORBIT AROUND THE A&K BRAND MARK */
+.hero-orbit{overflow:visible}
+.category-orbit{position:absolute;inset:0;z-index:4;pointer-events:none;animation:categoryOrbit 42s linear infinite}
+.orbit-cat{position:absolute;left:50%;top:50%;transform-origin:center;min-height:36px;padding:8px 10px;font-size:10px;border-color:#d6f7f2;box-shadow:0 8px 22px #102c4426,0 0 14px #38e5df22}
+.cat-1{transform:translate(-50%,-50%) translate(0,-139px)}
+.cat-2{transform:translate(-50%,-50%) translate(82px,-112px)}
+.cat-3{transform:translate(-50%,-50%) translate(133px,-43px)}
+.cat-4{transform:translate(-50%,-50%) translate(133px,43px)}
+.cat-5{transform:translate(-50%,-50%) translate(82px,112px)}
+.cat-6{transform:translate(-50%,-50%) translate(0,139px)}
+.cat-7{transform:translate(-50%,-50%) translate(-82px,112px)}
+.cat-8{transform:translate(-50%,-50%) translate(-133px,43px)}
+.cat-9{transform:translate(-50%,-50%) translate(-133px,-43px)}
+.cat-10{transform:translate(-50%,-50%) translate(-82px,-112px)}
+@keyframes categoryOrbit{to{transform:rotate(360deg)}}
+@media(max-width:760px){.hero-orbit{min-height:245px}.category-orbit{transform:scale(.82);inset:-8px 0}.cat-1{transform:translate(-50%,-50%) translate(0,-119px)}.cat-2{transform:translate(-50%,-50%) translate(70px,-96px)}.cat-3{transform:translate(-50%,-50%) translate(113px,-37px)}.cat-4{transform:translate(-50%,-50%) translate(113px,37px)}.cat-5{transform:translate(-50%,-50%) translate(70px,96px)}.cat-6{transform:translate(-50%,-50%) translate(0,119px)}.cat-7{transform:translate(-50%,-50%) translate(-70px,96px)}.cat-8{transform:translate(-50%,-50%) translate(-113px,37px)}.cat-9{transform:translate(-50%,-50%) translate(-113px,-37px)}.cat-10{transform:translate(-50%,-50%) translate(-70px,-96px)}}
+@media(max-width:430px){.hero-orbit{min-height:225px}.category-orbit{transform:scale(.70)}.orbit-cat{font-size:9px;padding:7px 8px}}
+@media(prefers-reduced-motion:reduce){.category-orbit{animation:none}}
 
 </style>
 </head>
@@ -355,9 +389,18 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
   <div class="hero-orbit" aria-hidden="true">
     <div class="orbit-ring ring-one"></div><div class="orbit-ring ring-two"></div>
     <div class="orbit-core"><span>A&amp;K</span><small>FAIR MART</small></div>
-    <div class="orbit-chip chip-one">🏠 <b>Property</b></div>
-    <div class="orbit-chip chip-two">🚗 <b>Vehicles</b></div>
-    <div class="orbit-chip chip-three">📱 <b>Electronics</b></div>
+    <div class="category-orbit" aria-label="All marketplace categories orbit around A and K logo">
+      <div class="orbit-chip orbit-cat cat-1">🏠 <b>Property</b></div>
+      <div class="orbit-chip orbit-cat cat-2">🚗 <b>Vehicles</b></div>
+      <div class="orbit-chip orbit-cat cat-3">💻 <b>Electronics</b></div>
+      <div class="orbit-chip orbit-cat cat-4">📱 <b>Mobiles</b></div>
+      <div class="orbit-chip orbit-cat cat-5">🛋️ <b>Furniture</b></div>
+      <div class="orbit-chip orbit-cat cat-6">🧺 <b>Home Appliances</b></div>
+      <div class="orbit-chip orbit-cat cat-7">👗 <b>Fashion</b></div>
+      <div class="orbit-chip orbit-cat cat-8">💼 <b>Jobs</b></div>
+      <div class="orbit-chip orbit-cat cat-9">🛠️ <b>Services</b></div>
+      <div class="orbit-chip orbit-cat cat-10">✨ <b>Other</b></div>
+    </div>
   </div>
   <div class="searchrow">
     <input id="searchBox" placeholder="Search products, cars, property... / تلاش کریں">
@@ -398,6 +441,21 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
       <div class="auth-input-wrap"><span>▣</span><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password (6+ characters)"></div>
       <button class="auth-forgot" type="button" onclick="forgotPassword()">Forgot Password?</button>
       <button class="auth-primary" type="button" onclick="signIn()">⇥ &nbsp; SIGN IN</button>
+      <div class="auth-or"><span></span> OR CONTINUE WITH <span></span></div>
+      <div class="auth-social-grid" aria-label="Social login options">
+        <button class="auth-social" type="button" onclick="signInWithProvider('google')">🌐 Google</button>
+        <button class="auth-social" type="button" onclick="signInWithProvider('facebook')">📘 Facebook</button>
+        <button class="auth-social" type="button" onclick="signInWithProvider('apple')"> Apple</button>
+      </div>
+      <div class="auth-phone-box">
+        <p><strong>📱 Login with Mobile Number</strong><br>Enter your number with country code, e.g. +923001234567</p>
+        <input id="loginPhone" type="tel" autocomplete="tel" placeholder="+92 300 1234567" aria-label="Mobile number with country code">
+        <input id="loginPhoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="SMS verification code (OTP)" aria-label="SMS verification code">
+        <div class="auth-phone-actions">
+          <button type="button" onclick="sendPhoneOtp()">Send OTP</button>
+          <button type="button" onclick="verifyPhoneOtp()">Verify &amp; Login</button>
+        </div>
+      </div>
       <div class="auth-or"><span></span> OR <span></span></div>
       <button class="auth-create" type="button" onclick="signUp()">New to A&amp;K? <b>Create Account</b> <strong>›</strong></button>
       <div id="resetPanel" class="auth-reset" style="display:none">
@@ -428,6 +486,54 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
     <p class="hint">Share the details of the item you want to sell.</p>
     <input id="adTitle" placeholder="Ad title / اشتہار کا عنوان">
     <select id="adCategory"><option value="">Select category</option></select>
+    <div id="propertyFields" class="property-fields">
+      <h3>🏡 Property Details | پراپرٹی کی تفصیل</h3>
+      <p class="property-note">Residential and commercial property details. These details will appear with your advertisement.</p>
+      <div class="property-grid">
+        <div><label for="propertyType">Property Type</label><select id="propertyType"><option value="">Select property type</option><option>House</option><option>Flat / Apartment</option><option>Residential Plot</option><option>Commercial Plot</option><option>Shop</option><option>Office</option><option>Building / Plaza</option><option>Farm House</option><option>Agricultural Land</option><option>Warehouse</option></select></div>
+        <div><label for="propertyPurpose">Purpose</label><select id="propertyPurpose"><option value="">Select purpose</option><option>For Sale</option><option>For Rent</option></select></div>
+        <div><label for="propertyClass">Category</label><select id="propertyClass"><option value="">Select category</option><option>Residential</option><option>Commercial</option><option>Agricultural</option></select></div>
+        <div><label for="propertyArea">Area Size</label><input id="propertyArea" type="number" min="0" step="any" placeholder="e.g. 5"></div>
+        <div><label for="propertyUnit">Area Unit</label><select id="propertyUnit"><option>Marla</option><option>Kanal</option><option>Square Feet</option><option>Square Yards</option><option>Square Meters</option></select></div>
+        <div><label for="propertyBedrooms">Bedrooms</label><select id="propertyBedrooms"><option value="">Not specified</option><option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></div>
+        <div><label for="propertyBathrooms">Bathrooms</label><select id="propertyBathrooms"><option value="">Not specified</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+        <div><label for="propertyCondition">Condition</label><select id="propertyCondition"><option value="">Not specified</option><option>New</option><option>Used</option><option>Under Construction</option></select></div>
+      </div>
+      <div class="property-checks">
+        <label><input type="checkbox" name="propertyFeature" value="Parking"> Parking</label>
+        <label><input type="checkbox" name="propertyFeature" value="Electricity"> Electricity</label>
+        <label><input type="checkbox" name="propertyFeature" value="Gas"> Gas</label>
+        <label><input type="checkbox" name="propertyFeature" value="Water"> Water</label>
+        <label><input type="checkbox" name="propertyFeature" value="Lift"> Lift</label>
+        <label><input type="checkbox" name="propertyFeature" value="Security"> Security</label>
+        <label><input type="checkbox" name="propertyFeature" value="Furnished"> Furnished</label>
+        <label><input type="checkbox" name="propertyFeature" value="Possession"> Possession</label>
+      </div>
+    </div>
+    <div id="vehicleFields" class="property-fields">
+      <h3>🚗 Vehicle Details | گاڑی کی تفصیل</h3>
+      <p class="property-note">PakWheels-style vehicle information. Add accurate details to help buyers find your vehicle.</p>
+      <div class="property-grid">
+        <div><label for="vehicleType">Vehicle Type</label><select id="vehicleType"><option value="">Select type</option><option>Car</option><option>Bike</option><option>Truck</option><option>Bus / Van</option><option>Pickup</option><option>Tractor</option><option>Commercial Vehicle</option><option>Other</option></select></div>
+        <div><label for="vehicleMake">Make / Brand</label><input id="vehicleMake" placeholder="e.g. Toyota, Honda, Suzuki"></div>
+        <div><label for="vehicleModel">Model</label><input id="vehicleModel" placeholder="e.g. Corolla, Civic, Alto"></div>
+        <div><label for="vehicleVariant">Variant / Version</label><input id="vehicleVariant" placeholder="e.g. GLi, VTi, VXL"></div>
+        <div><label for="vehicleYear">Model Year</label><input id="vehicleYear" type="number" min="1950" max="2099" placeholder="e.g. 2022"></div>
+        <div><label for="vehicleMileage">Mileage (KM)</label><input id="vehicleMileage" type="number" min="0" placeholder="e.g. 45000"></div>
+        <div><label for="vehicleFuel">Fuel Type</label><select id="vehicleFuel"><option value="">Select fuel</option><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option><option>CNG</option><option>LPG</option></select></div>
+        <div><label for="vehicleTransmission">Transmission</label><select id="vehicleTransmission"><option value="">Select transmission</option><option>Manual</option><option>Automatic</option><option>CVT</option><option>AGS</option><option>Other</option></select></div>
+        <div><label for="vehicleEngine">Engine (CC)</label><input id="vehicleEngine" type="number" min="0" placeholder="e.g. 1300"></div>
+        <div><label for="vehicleBody">Body Type</label><select id="vehicleBody"><option value="">Select body type</option><option>Hatchback</option><option>Sedan</option><option>SUV</option><option>Crossover</option><option>Coupe</option><option>Convertible</option><option>Wagon</option><option>MPV</option><option>Mini Truck</option><option>Other</option></select></div>
+        <div><label for="vehicleColor">Exterior Color</label><input id="vehicleColor" placeholder="e.g. White, Black, Silver"></div>
+        <div><label for="vehicleDrive">Drive</label><select id="vehicleDrive"><option value="">Select drive</option><option>2WD</option><option>4WD</option><option>AWD</option><option>FWD</option><option>RWD</option></select></div>
+        <div><label for="vehicleRegistration">Registration City</label><input id="vehicleRegistration" placeholder="e.g. Lahore"></div>
+        <div><label for="vehicleCondition">Condition</label><select id="vehicleCondition"><option value="">Select condition</option><option>New</option><option>Used</option></select></div>
+        <div><label for="vehicleAssembly">Assembly</label><select id="vehicleAssembly"><option value="">Select assembly</option><option>Local</option><option>Imported</option></select></div>
+        <div><label for="vehicleOwners">Previous Owners</label><select id="vehicleOwners"><option value="">Not specified</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+        <div><label for="vehicleDocuments">Documents</label><select id="vehicleDocuments"><option value="">Select status</option><option>Original</option><option>Duplicate</option><option>Incomplete</option></select></div>
+        <div><label for="vehicleSeats">Seats</label><input id="vehicleSeats" type="number" min="1" max="60" placeholder="e.g. 5"></div>
+      </div>
+    </div>
     <textarea id="adDescription" rows="4" placeholder="Description / تفصیل"></textarea>
     <input id="adPrice" type="number" min="0" placeholder="Price in PKR">
     <input id="adLocation" placeholder="City / Location">
@@ -483,7 +589,7 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 <script>
 "use strict";
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
+const SUPABASE_KEY = "sb_publishable_gwBu5OE9Ue351h24aM75Q_C-W6L1ch";
 // Add the administrator login email here to enable admin deletion of every listing.
 const ADMIN_EMAILS = [];
 // Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
@@ -575,22 +681,68 @@ async function signIn(){
   currentUser=data.user;updateUser();
   message("accountMessage","Login successful.","#12816f");
 }
+async function signInWithProvider(provider){
+  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
+  try{
+    const redirectTo=window.location.origin+window.location.pathname;
+    const {error}=await db.auth.signInWithOAuth({provider,options:{redirectTo}});
+    if(error)throw error;
+  }catch(error){showError("accountMessage",error);}
+}
+async function sendPhoneOtp(){
+  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
+  const phone=document.getElementById("loginPhone").value.trim();
+  if(!/^\+[1-9]\d{7,14}$/.test(phone)){message("accountMessage","Enter a valid mobile number with country code, e.g. +923001234567.","#b42318");return;}
+  try{
+    const {error}=await db.auth.signInWithOtp({phone,options:{shouldCreateUser:true}});
+    if(error)throw error;
+    message("accountMessage","SMS verification code sent. Check your mobile and enter the OTP below.","#12816f");
+  }catch(error){showError("accountMessage",error);}
+}
+async function verifyPhoneOtp(){
+  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
+  const phone=document.getElementById("loginPhone").value.trim();
+  const token=document.getElementById("loginPhoneOtp").value.trim();
+  if(!/^\+[1-9]\d{7,14}$/.test(phone)||!/^\d{6}$/.test(token)){message("accountMessage","Enter your mobile number and the 6-digit SMS code.","#b42318");return;}
+  try{
+    const {data,error}=await db.auth.verifyOtp({phone,token,type:"sms"});
+    if(error)throw error;
+    currentUser=data.user;updateUser();
+    message("accountMessage","Mobile number verified. You are now logged in.","#12816f");
+  }catch(error){showError("accountMessage",error);}
+}
+function showPasswordRecovery(messageText="Reset link verified. Enter your new password below."){
+  const panel=document.getElementById("resetPanel");
+  if(panel)panel.style.display="block";
+  const heading=document.getElementById("authWelcome");if(heading)heading.textContent="Create New Password";
+  const subtitle=document.querySelector(".auth-subtitle");if(subtitle)subtitle.textContent="Complete your password reset";
+  const account=document.getElementById("account");if(account)account.scrollIntoView({behavior:"smooth",block:"start"});
+  message("accountMessage",messageText,"#12816f");
+}
 async function forgotPassword(){
+  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
   const email=document.getElementById("email").value.trim();
-  if(!email){message("accountMessage","Please enter your account email first.","#b42318");return;}
+  if(!email){message("accountMessage","Please enter your account email first.","#b42318");document.getElementById("email").focus();return;}
   const redirectTo=window.location.origin+window.location.pathname;
-  const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo});
-  if(error){showError("accountMessage",error);return;}
-  message("accountMessage","Password reset link sent. Check your email inbox and spam folder.","#12816f");
+  try{
+    const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo});
+    if(error)throw error;
+    message("accountMessage","Password reset link sent. Open the email on this device, then tap its reset link. Check Spam too.","#12816f");
+  }catch(error){showError("accountMessage",error);}
 }
 async function saveNewPassword(){
   const password=document.getElementById("newPassword").value;
   if(password.length<6){message("accountMessage","New password must be at least 6 characters.","#b42318");return;}
-  const {error}=await db.auth.updateUser({password});
-  if(error){showError("accountMessage",error);return;}
-  document.getElementById("resetPanel").style.display="none";
-  document.getElementById("newPassword").value="";
-  message("accountMessage","Password updated successfully. You can now login with your new password.","#12816f");
+  try{
+    const {error}=await db.auth.updateUser({password});
+    if(error)throw error;
+    const panel=document.getElementById("resetPanel");if(panel)panel.style.display="none";
+    document.getElementById("newPassword").value="";
+    const heading=document.getElementById("authWelcome");if(heading)heading.textContent="Welcome Back";
+    const subtitle=document.querySelector(".auth-subtitle");if(subtitle)subtitle.textContent="Sign in to continue";
+    if(window.history&&window.history.replaceState)window.history.replaceState({},document.title,window.location.pathname+window.location.search);
+    message("accountMessage","Password updated successfully. You can now login with your new password.","#12816f");
+  }catch(error){showError("accountMessage",error);}
 }
 async function signOut(){
   const {error}=await db.auth.signOut();
@@ -615,13 +767,59 @@ function openPost(){
   section.style.display="block";
   section.scrollIntoView({behavior:"smooth"});
 }
+function selectedCategoryLabel(){
+  const select=document.getElementById("adCategory");
+  return select&&select.selectedOptions&&select.selectedOptions[0]?select.selectedOptions[0].textContent:"";
+}
+function isPropertyCategory(){return /property|real estate|پراپرٹی|زمین|گھر/i.test(selectedCategoryLabel());}
+function isVehicleCategory(){return /vehicle|car|bike|motor|گاڑی|موٹر سائیکل/i.test(selectedCategoryLabel());}
+function togglePropertyFields(){
+  const panel=document.getElementById("propertyFields"),vehicle=document.getElementById("vehicleFields");
+  if(panel)panel.style.display=isPropertyCategory()?"block":"none";
+  if(vehicle)vehicle.style.display=isVehicleCategory()?"block":"none";
+}
+function propertyDescriptionParts(value){
+  const source=value||"",fields={};
+  const markers=[/\n?\[PROPERTY DETAILS\][\s\S]*?\[\/PROPERTY DETAILS\]\n?/,/\n?\[VEHICLE DETAILS\][\s\S]*?\[\/VEHICLE DETAILS\]\n?/];
+  let description=source;
+  markers.forEach(marker=>{const match=description.match(marker);if(match){match[0].split("\n").slice(1).forEach(line=>{const i=line.indexOf(":");if(i>0)fields[line.slice(0,i).trim()]=line.slice(i+1).trim();});description=description.replace(marker,"");}});
+  return {description:description.trim(),fields};
+}
+function buildPropertyDescription(baseDescription){
+  const clean=propertyDescriptionParts(baseDescription).description;
+  const value=id=>{const el=document.getElementById(id);return el?String(el.value).trim():"";};
+  const lines=[],add=(label,v)=>{if(v)lines.push(label+": "+v);};
+  if(isPropertyCategory()){
+    add("Type",value("propertyType"));add("Purpose",value("propertyPurpose"));add("Category",value("propertyClass"));
+    const area=value("propertyArea"),unit=value("propertyUnit");add("Area",area?(area+" "+unit):"");
+    add("Bedrooms",value("propertyBedrooms"));add("Bathrooms",value("propertyBathrooms"));add("Condition",value("propertyCondition"));
+    const features=[...document.querySelectorAll('input[name="propertyFeature"]:checked')].map(x=>x.value);add("Features",features.join(", "));
+    return clean+(lines.length?"\n\n[PROPERTY DETAILS]\n"+lines.join("\n")+"\n[/PROPERTY DETAILS]":"");
+  }
+  if(isVehicleCategory()){
+    [["Vehicle Type","vehicleType"],["Make","vehicleMake"],["Model","vehicleModel"],["Variant","vehicleVariant"],["Model Year","vehicleYear"],["Mileage KM","vehicleMileage"],["Fuel Type","vehicleFuel"],["Transmission","vehicleTransmission"],["Engine CC","vehicleEngine"],["Body Type","vehicleBody"],["Exterior Color","vehicleColor"],["Drive","vehicleDrive"],["Registration City","vehicleRegistration"],["Condition","vehicleCondition"],["Assembly","vehicleAssembly"],["Previous Owners","vehicleOwners"],["Documents","vehicleDocuments"],["Seats","vehicleSeats"]].forEach(([label,id])=>add(label,value(id)));
+    return clean+(lines.length?"\n\n[VEHICLE DETAILS]\n"+lines.join("\n")+"\n[/VEHICLE DETAILS]":"");
+  }
+  return clean;
+}
+function fillPropertyFieldsFromDescription(description){
+  const parsed=propertyDescriptionParts(description).fields;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||"";};
+  set("propertyType",parsed.Type);set("propertyPurpose",parsed.Purpose);set("propertyClass",parsed.Category);
+  const area=(parsed.Area||"").match(/^([0-9.]+)\s*(.*)$/);set("propertyArea",area?area[1]:"");if(area)set("propertyUnit",area[2]);
+  set("propertyBedrooms",parsed.Bedrooms);set("propertyBathrooms",parsed.Bathrooms);set("propertyCondition",parsed.Condition);
+  [["vehicleType","Vehicle Type"],["vehicleMake","Make"],["vehicleModel","Model"],["vehicleVariant","Variant"],["vehicleYear","Model Year"],["vehicleMileage","Mileage KM"],["vehicleFuel","Fuel Type"],["vehicleTransmission","Transmission"],["vehicleEngine","Engine CC"],["vehicleBody","Body Type"],["vehicleColor","Exterior Color"],["vehicleDrive","Drive"],["vehicleRegistration","Registration City"],["vehicleCondition","Condition"],["vehicleAssembly","Assembly"],["vehicleOwners","Previous Owners"],["vehicleDocuments","Documents"],["vehicleSeats","Seats"]].forEach(([id,key])=>set(id,parsed[key]));
+  const features=(parsed.Features||"").split(/,\s*/);
+  document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=features.includes(x.value));
+}
 async function postAd(){
   const button=document.getElementById("submitAdButton");
   if(!currentUser){message("postMessage","Please login first.","#b42318");showAccount();return;}
   if(currentRole!=="seller"){message("postMessage","Please select Seller to post or edit an advertisement.","#b42318");return;}
   const title=document.getElementById("adTitle").value.trim();
   const category=document.getElementById("adCategory").value;
-  const description=document.getElementById("adDescription").value.trim();
+  const descriptionInput=document.getElementById("adDescription").value.trim();
+  const description=buildPropertyDescription(descriptionInput);
   const price=document.getElementById("adPrice").value;
   const locationText=document.getElementById("adLocation").value.trim();
   const file=document.getElementById("adImage").files[0];
@@ -657,6 +855,10 @@ async function postAd(){
     cancelEdit(true);
     ["adTitle","adDescription","adPrice","adLocation","adImage","sellerName","sellerMobile","sellerAddress"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("adCategory").value="";
+    fillPropertyFieldsFromDescription("");
+    document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=false);
+    document.querySelectorAll('#vehicleFields input,#vehicleFields select').forEach(x=>x.value="");
+    togglePropertyFields();
     await loadAds();
   }catch(error){showError("postMessage",error);}
   finally{button.disabled=false;button.textContent=editingAdId!==null?"Update Advertisement":"Submit Advertisement";}
@@ -669,7 +871,10 @@ function editAd(ad){
   document.getElementById("buyerBtn").classList.remove("active");document.getElementById("sellerBtn").classList.add("active");
   document.getElementById("adTitle").value=ad.listing_tittle||"";
   document.getElementById("adCategory").value=String(ad.caterory_id??"");
-  document.getElementById("adDescription").value=ad.description||"";
+  const parsedDescription=propertyDescriptionParts(ad.description||"");
+  document.getElementById("adDescription").value=parsedDescription.description;
+  fillPropertyFieldsFromDescription(ad.description||"");
+  togglePropertyFields();
   document.getElementById("adPrice").value=ad.price??"";
   document.getElementById("adLocation").value=ad.locations||"";
   document.getElementById("adImage").value="";
@@ -683,6 +888,7 @@ function cancelEdit(silent=false){
   editingAdId=null;
   ["adTitle","adDescription","adPrice","adLocation","adImage"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   const category=document.getElementById("adCategory");if(category)category.value="";
+  fillPropertyFieldsFromDescription("");document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=false);document.querySelectorAll('#vehicleFields input,#vehicleFields select').forEach(x=>x.value="");togglePropertyFields();
   const button=document.getElementById("submitAdButton");if(button){button.textContent="Submit Advertisement";button.disabled=false;}
   const cancel=document.getElementById("cancelEditButton");if(cancel)cancel.style.display="none";
   if(!silent)message("postMessage","Edit cancelled. Your existing advertisement was not changed.","#64748b");
@@ -770,14 +976,12 @@ async function submitOffer(event){
     // SELECT policy is created, so private buyer details are not exposed.
     const {error}=await db.from("offers").insert({
       listing_id:payload.listing_id,
-      listing_title:payload.listing_title,
+      "listing-title":payload.listing_title,
       listed_price:payload.listed_price,
-      offer_price:payload.offer_price,
+      offered_price:payload.offer_price,
       buyer_name:payload.buyer_name,
       buyer_mobile:payload.buyer_mobile,
       message:payload.message,
-      role:payload.role,
-      source:payload.source,
       status:"new"
     });
     if(error)throw error;
@@ -811,25 +1015,28 @@ async function start(){
     const year=document.getElementById("year");if(year)year.textContent=new Date().getFullYear();
     setLanguage("en");
     const searchBox=document.getElementById("searchBox");if(searchBox)searchBox.addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
+    const categorySelect=document.getElementById("adCategory");if(categorySelect)categorySelect.addEventListener("change",togglePropertyFields);
     if(!window.supabase){
       message("userStatus","Supabase library did not load. Check your internet connection and refresh the page.","#b42318");
       const adsGrid=document.getElementById("adsGrid");if(adsGrid)adsGrid.innerHTML='<p class="empty">Website connection library could not load. Please check your internet connection.</p>';
       return;
     }
     db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    // Listen before restoring the session so the recovery event cannot be missed.
+    db.auth.onAuthStateChange((event,session)=>{
+      currentUser=session?session.user:null;updateUser();
+      if(event==="PASSWORD_RECOVERY")showPasswordRecovery();
+    });
     const {data,error}=await db.auth.getSession();
     if(error)throw error;
     currentUser=data&&data.session?data.session.user:null;
     updateUser();
-    db.auth.onAuthStateChange((event,session)=>{
-      currentUser=session?session.user:null;updateUser();
-      if(event==="PASSWORD_RECOVERY"){
-        const resetPanel=document.getElementById("resetPanel");if(resetPanel)resetPanel.style.display="block";
-        showAccount();
-        message("accountMessage","Enter and save your new password below.","#12816f");
-      }
-    });
+    // Some browsers restore the recovery session from the URL hash after page load.
+    if(/type=recovery|access_token=/.test(window.location.hash||"")){
+      setTimeout(()=>showPasswordRecovery("Password reset link opened. Enter your new password below."),250);
+    }
     await Promise.all([loadCategories(),loadAds()]);
+    togglePropertyFields();
   }catch(error){
     console.error("A&K Fair Mart initialization failed:",error);
     message("userStatus","Website connection error: "+(error.message||String(error)),"#b42318");

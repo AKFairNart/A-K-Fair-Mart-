@@ -244,29 +244,6 @@ let allCategories = [];
 let currentRole = "buyer";
 let currentLanguage = "en";
 
-const translations = {
-  en:{language:"Language / زبان",role:"Continue as / منتخب کریں",buyer:"🛍️ Buyer",seller:"🏪 Seller",hero:"Find It. Love It. Buy It.",search:"Search | تلاش کریں",categories:"Explore Categories",ads:"Latest Advertisements",post:"Post Your Advertisement",login:"Login / Sign Up"},
-  ur:{language:"زبان منتخب کریں",role:"اپنا کردار منتخب کریں",buyer:"🛍️ خریدار",seller:"🏪 فروخت کنندہ",hero:"اپنی پسند کی چیز تلاش کریں",search:"تلاش کریں",categories:"کیٹیگریز دیکھیں",ads:"تازہ ترین اشتہارات",post:"اپنا اشتہار دیں",login:"لاگ اِن / اکاؤنٹ بنائیں"}
-};
-function setLanguage(lang){
-  currentLanguage=lang;
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
-  document.getElementById("englishBtn").classList.toggle("active",lang==="en");
-  document.getElementById("urduBtn").classList.toggle("active",lang==="ur");
-  const t=translations[lang];
-  document.getElementById("languageLabel").textContent=t.language;
-  document.getElementById("roleLabel").textContent=t.role;
-  document.getElementById("buyerBtn").textContent=t.buyer;
-  document.getElementById("sellerBtn").textContent=t.seller;
-  document.querySelector(".hero h2").textContent=t.hero;
-  document.querySelector(".searchrow .btn").textContent=t.search;
-  document.querySelector("#categories .section-head h2").textContent=t.categories;
-  document.querySelector("#listings .section-head h2").textContent=t.ads;
-  document.querySelector("#postAd .formbox h2").textContent=t.post;
-  document.querySelector(".hero-actions .btn.teal").textContent=t.login;
-  document.documentElement.style.fontFamily=lang==="ur"?'"Noto Nastaliq Urdu",serif':'"DM Sans",Arial,sans-serif';
-}
 function setRole(role){
   currentRole=role;
   document.getElementById("buyerBtn").classList.toggle("active",role==="buyer");
@@ -494,24 +471,35 @@ function showAds(){
   document.getElementById("listings").scrollIntoView({behavior:"smooth"});
 }
 async function start(){
-  document.getElementById("year").textContent=new Date().getFullYear();
-  setLanguage("en");
-  document.getElementById("searchBox").addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
-  if(!window.supabase){message("userStatus","Supabase library did not load. Check your internet connection.","#b42318");return;}
-  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-  const {data,error}=await db.auth.getSession();
-  if(error)console.error(error);
-  currentUser=data&&data.session?data.session.user:null;
-  updateUser();
-  db.auth.onAuthStateChange((event,session)=>{
-    currentUser=session?session.user:null;updateUser();
-    if(event==="PASSWORD_RECOVERY"){
-      document.getElementById("resetPanel").style.display="block";
-      showAccount();
-      message("accountMessage","Enter and save your new password below.","#12816f");
+  try{
+    document.getElementById("year").textContent=new Date().getFullYear();
+    setLanguage("en");
+    document.getElementById("searchBox").addEventListener("keydown",e=>{if(e.key==="Enter")showAds();});
+    if(!window.supabase){
+      message("userStatus","Supabase library did not load. Check your internet connection and refresh the page.","#b42318");
+      document.getElementById("adsGrid").innerHTML='<p class="empty">Website connection library could not load. Please check your internet connection.</p>';
+      return;
     }
-  });
-  await Promise.all([loadCategories(),loadAds()]);
+    db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    const {data,error}=await db.auth.getSession();
+    if(error)throw error;
+    currentUser=data&&data.session?data.session.user:null;
+    updateUser();
+    db.auth.onAuthStateChange((event,session)=>{
+      currentUser=session?session.user:null;updateUser();
+      if(event==="PASSWORD_RECOVERY"){
+        document.getElementById("resetPanel").style.display="block";
+        showAccount();
+        message("accountMessage","Enter and save your new password below.","#12816f");
+      }
+    });
+    await Promise.all([loadCategories(),loadAds()]);
+  }catch(error){
+    console.error("A&K Fair Mart initialization failed:",error);
+    message("userStatus","Website connection error: "+(error.message||String(error)),"#b42318");
+    document.getElementById("categoryGrid").innerHTML='<div class="empty">Could not connect to the marketplace database. Please refresh and try again.</div>';
+    document.getElementById("adsGrid").innerHTML='<div class="empty">Advertisements could not be loaded. Please refresh and try again.</div>';
+  }
 }
 start();
 

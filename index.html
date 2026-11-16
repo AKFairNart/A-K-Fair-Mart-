@@ -754,7 +754,7 @@ async function getSellerId(){
   const mobile=document.getElementById("sellerMobile").value.trim();
   const address=document.getElementById("sellerAddress").value.trim();
   if(!sellerName||!mobile||!address)throw new Error("Please enter seller name, mobile number and full address.");
-  const sellerRecord={created_at:new Date().toISOString(),seller_name:sellerName,mobile:mobile,"seller-address":address};
+  const sellerRecord={created_at:new Date().toISOString(),seller_name:sellerName,mobile:mobile,"seller_address":address};
   const {data:newSeller,error:insertError}=await db.from("sellers").insert(sellerRecord).select("id").single();
   if(insertError)throw insertError;
   return newSeller.id;

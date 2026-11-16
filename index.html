@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#142b45">
+<meta name="description" content="A&K Fair Mart — a marketplace to buy and sell property, vehicles, electronics, furniture, fashion and services in Pakistan.">
+<meta name="version" content="2026.11.16-1">
 <title>A&K FAIR MART | خرید و فروخت</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -951,6 +953,7 @@ async function deleteAd(adId,ownerId){
 
 let selectedOfferListing=null;
 function openOffer(ad){
+  if(!currentUser){showAccount();message("accountMessage","Please login or create an account before making an offer.","#b42318");return;}
   selectedOfferListing=ad;
   const modal=document.getElementById("offerModal"),summary=document.getElementById("offerListingSummary"),status=document.getElementById("offerStatus");
   if(!modal||!summary)return;
@@ -966,26 +969,29 @@ async function submitOffer(event){
   const setStatus=(msg)=>{if(status)status.textContent=msg;};
   if(!selectedOfferListing){setStatus("Please select an advertisement first.");return;}
   if(!db){setStatus("Website is not connected. Please refresh and try again.");return;}
-  const payload={listing_id:selectedOfferListing.id,listing_title:selectedOfferListing.listing_tittle||"",listed_price:selectedOfferListing.price??null,offer_price:Number(document.getElementById("offerPrice").value),buyer_name:document.getElementById("offerName").value.trim(),buyer_mobile:document.getElementById("offerMobile").value.trim(),message:document.getElementById("offerNote").value.trim(),role:currentRole||"buyer",source:"A&K Fair Mart"};
-  if(!payload.buyer_name||!payload.buyer_mobile||!Number.isFinite(payload.offer_price)||payload.offer_price<=0){setStatus("Please enter your name, mobile number and a valid offer price.");return;}
+  if(!currentUser){setStatus("Please login or create an account before sending an offer.");showAccount();return;}
+  const buyerName=document.getElementById("offerName").value.trim();
+  const buyerMobile=document.getElementById("offerMobile").value.trim();
+  const offeredPrice=Number(document.getElementById("offerPrice").value);
+  const buyerNote=document.getElementById("offerNote").value.trim();
+  if(!buyerName||!buyerMobile||!Number.isFinite(offeredPrice)||offeredPrice<=0){setStatus("Please enter your name, mobile number and a valid offer price.");return;}
   if(button){button.disabled=true;button.textContent="Sending...";}
   try{
-    // Public visitors can submit an offer; RLS permits INSERT only. No public
-    // SELECT policy is created, so private buyer details are not exposed.
+    // Match the supplied offers table exactly. Buyer contact is stored in the
+    // private message field because the agreed schema has no buyer_name/mobile columns.
+    // Keep offers SELECT restricted to admins in Supabase RLS.
+    const privateMessage=["Buyer name: "+buyerName,"Buyer mobile: "+buyerMobile,buyerNote?"Message: "+buyerNote:""] .filter(Boolean).join("\n");
     const {error}=await db.from("offers").insert({
-      listing_id:payload.listing_id,
-      listing_title:payload.listing_title,
-      listed_price:payload.listed_price,
-      offer_price:payload.offer_price,
-      buyer_name:payload.buyer_name,
-      buyer_mobile:payload.buyer_mobile,
-      message:payload.message,
-      role:payload.role,
-      source:payload.source,
-      status:"new"
+      listing_id:selectedOfferListing.id,
+      buyer_id:currentUser.id,
+      offered_price:offeredPrice,
+      message:privateMessage,
+      status:"new",
+      listing_title:selectedOfferListing.listing_tittle||"",
+      listed_price:selectedOfferListing.price??null
     });
     if(error)throw error;
-    setStatus("Your offer has been received successfully. A&K Fair Mart admin will contact you.");
+    setStatus("Your offer has been received successfully. A&K Fair Mart admin will review it.");
     const form=document.getElementById("offerForm");if(form)form.reset();
     setTimeout(closeOffer,1800);
   }catch(error){

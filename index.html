@@ -349,6 +349,12 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 .premium-ribbon{display:inline-block;background:#fff2c5;color:#76520b;border:1px solid #efd17b;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:900}
 @media(max-width:600px){#adminPanel{padding:12px;margin:12px}.admin-grid{grid-template-columns:1fr 1fr}}
 
+.photo-upload-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0 14px}
+.photo-upload-list>div{background:#f7fafc;border:1px solid #dce6ee;border-radius:10px;padding:9px;min-width:0}
+.photo-upload-list label{display:block;font-size:12px;font-weight:800;margin-bottom:5px;color:#20364b}
+.photo-upload-list input{width:100%;font-size:12px}
+@media(max-width:520px){.photo-upload-list{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -571,9 +577,20 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
       <input id="sellerAddress" placeholder="Full address / مکمل پتہ">
       <p class="small">Your phone number and full address are kept off public advertisement cards. Buyers see the public listing only.</p>
     </div>
-    <label class="small" for="adImage">Upload product photos (up to 10 pictures)</label>
-    <input id="adImage" type="file" accept="image/*" multiple>
-    <p class="small">You can select up to 10 images. Maximum 5 MB per image. On editing, newly selected pictures are added to existing pictures.</p>
+    <label class="small">Upload product photos (up to 10 pictures — each picture has its own upload button)</label>
+    <div class="photo-upload-list">
+      <div><label for="adImage1">Picture 1</label><input id="adImage1" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage2">Picture 2</label><input id="adImage2" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage3">Picture 3</label><input id="adImage3" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage4">Picture 4</label><input id="adImage4" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage5">Picture 5</label><input id="adImage5" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage6">Picture 6</label><input id="adImage6" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage7">Picture 7</label><input id="adImage7" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage8">Picture 8</label><input id="adImage8" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage9">Picture 9</label><input id="adImage9" class="ad-image-slot" type="file" accept="image/*"></div>
+      <div><label for="adImage10">Picture 10</label><input id="adImage10" class="ad-image-slot" type="file" accept="image/*"></div>
+    </div>
+    <p class="small">Choose one picture in each separate box. You can upload 1 to 10 pictures. Maximum 5 MB per picture. On editing, newly selected pictures are added to existing pictures.</p>
     <div id="adImagePreview" class="image-preview-grid" aria-live="polite"></div>
     <label class="small" for="adVideo">Upload one product video (maximum 1 video)</label>
     <input id="adVideo" type="file" accept="video/*">
@@ -849,15 +866,22 @@ function renderAdImagePreview(urls){
   box.innerHTML="";
   (urls||[]).slice(0,10).forEach(url=>{const img=document.createElement("img");img.src=url;img.alt="Selected listing photo";box.appendChild(img);});
 }
+function getSelectedAdImageFiles(){
+  return Array.from(document.querySelectorAll(".ad-image-slot")).map(input=>input.files&&input.files[0]).filter(Boolean);
+}
 function previewSelectedAdImages(){
-  const input=document.getElementById("adImage");if(!input)return;
-  const files=Array.from(input.files||[]);
-  if(files.length>10){message("postMessage","You can select a maximum of 10 pictures.","#b42318");input.value="";renderAdImagePreview([]);return;}
+  const files=getSelectedAdImageFiles();
   const box=document.getElementById("adImagePreview");if(!box)return;box.innerHTML="";
   files.forEach(file=>{if(!file.type.startsWith("image/"))return;const img=document.createElement("img");img.alt=file.name;img.src=URL.createObjectURL(file);box.appendChild(img);});
 }
 document.addEventListener("DOMContentLoaded",()=>{
-  const input=document.getElementById("adImage");if(input)input.addEventListener("change",previewSelectedAdImages);
+  document.querySelectorAll(".ad-image-slot").forEach(input=>input.addEventListener("change",()=>{
+    const file=input.files&&input.files[0];
+    if(file&&(!file.type.startsWith("image/")||file.size>5*1024*1024)){
+      message("postMessage",!file.type.startsWith("image/")?"Please select an image file.":"Each image must be 5 MB or smaller.","#b42318");input.value="";
+    }
+    previewSelectedAdImages();
+  }));
   const video=document.getElementById("adVideo");if(video)video.addEventListener("change",previewSelectedAdVideo);
 });
 function previewSelectedAdVideo(){
@@ -881,7 +905,7 @@ async function postAd(){
   const description=buildPropertyDescription(descriptionInput);
   const price=document.getElementById("adPrice").value;
   const locationText=document.getElementById("adLocation").value.trim();
-  const files=Array.from(document.getElementById("adImage").files||[]);
+  const files=getSelectedAdImageFiles();
   const videoFile=(document.getElementById("adVideo").files||[])[0]||null;
   if(!title||!category||!description||!price||!locationText){message("postMessage","Please fill in title, category, description, price and location.","#b42318");return;}
   if(files.length>10){message("postMessage","You can upload a maximum of 10 pictures per advertisement.","#b42318");return;}
@@ -930,7 +954,7 @@ async function postAd(){
       message("postMessage","Your advertisement has been posted successfully!","#12816f");
     }
     cancelEdit(true);
-    ["adTitle","adDescription","adPrice","adLocation","adImage","adVideo","sellerName","sellerMobile","sellerAddress"].forEach(id=>document.getElementById(id).value="");
+    ["adTitle","adDescription","adPrice","adLocation","adVideo","sellerName","sellerMobile","sellerAddress",...Array.from({length:10},(_,i)=>"adImage"+(i+1))].forEach(id=>document.getElementById(id).value="");
     document.getElementById("adCategory").value="";
     fillPropertyFieldsFromDescription("");
     document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=false);
@@ -954,7 +978,7 @@ function editAd(ad){
   togglePropertyFields();
   document.getElementById("adPrice").value=ad.price??"";
   document.getElementById("adLocation").value=ad.locations||"";
-  document.getElementById("adImage").value="";
+  document.querySelectorAll(".ad-image-slot").forEach(input=>input.value="");
   renderAdImagePreview([]);
   document.getElementById("submitAdButton").textContent="Update Advertisement";
   document.getElementById("cancelEditButton").style.display="inline-block";
@@ -964,7 +988,7 @@ function editAd(ad){
 }
 function cancelEdit(silent=false){
   editingAdId=null;
-  ["adTitle","adDescription","adPrice","adLocation","adImage","adVideo"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  ["adTitle","adDescription","adPrice","adLocation","adVideo",...Array.from({length:10},(_,i)=>"adImage"+(i+1))].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   const category=document.getElementById("adCategory");if(category)category.value="";
   renderAdImagePreview([]);const vp=document.getElementById("adVideoPreview");if(vp)vp.innerHTML="";
   fillPropertyFieldsFromDescription("");document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=false);document.querySelectorAll('#vehicleFields input,#vehicleFields select').forEach(x=>x.value="");togglePropertyFields();

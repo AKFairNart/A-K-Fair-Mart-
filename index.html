@@ -394,10 +394,10 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
   </div>
 </div>
 <nav>
-  <a href="#">Home | ہوم</a>
-  <a href="#categories">Categories | کیٹیگریز</a>
-  <a href="#listings">Ads | اشتہارات</a>
-  <a href="#account" onclick="showAccount()">Account | اکاؤنٹ</a>
+  <a href="#" onclick="showPage('home');return false">Home | ہوم</a>
+  <a href="#categories" onclick="showPage('categories');return false">Categories | کیٹیگریز</a>
+  <a href="#listings" onclick="showPage('listings');return false">Ads | اشتہارات</a>
+  <a href="#account" onclick="showAccount();return false">Account | اکاؤنٹ</a>
 </nav>
 
 <main>
@@ -473,7 +473,6 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
       <button class="auth-logout" type="button" onclick="signOut()">Logout</button>
       <div id="accountMessage" class="notice"></div>
       <div id="clientIdDisplay" class="client-id-chip" style="display:none"></div>
-      <button id="membershipRequestButton" class="btn" type="button" style="display:none" onclick="requestSellerMembership()">Request Seller Membership — Rs. 1,000 / month</button>
       <p class="auth-privacy">🔒 Your personal contact details remain private</p>
     </div>
   </div>
@@ -485,14 +484,13 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
     <div class="admin-stat">Approved income <b id="incomeTotal">Rs. 0</b></div>
     <div class="admin-stat">Pending requests <b id="pendingTotal">0</b></div>
     <div class="admin-stat">Featured listings <b id="featuredTotal">0</b></div>
-    <div class="admin-stat">Active memberships <b id="membershipTotal">0</b></div>
-  </div>
+    </div>
   <h3>Find Client by Client ID</h3>
   <div class="searchrow"><input id="clientLookupInput" placeholder="Example: AKF-1234567890"><button class="btn dark" type="button" onclick="adminFindClient()">Search Client</button></div>
   <div id="clientLookupResult" aria-live="polite"></div>
   <h3>Record Income / Deal</h3>
   <div class="admin-grid">
-    <select id="incomeType"><option value="successful_deal">Successful Deal Service Fee</option><option value="featured_listing">Featured Listing</option><option value="seller_membership">Seller Membership</option><option value="advertisement">Website Advertisement</option></select>
+    <select id="incomeType"><option value="successful_deal">Successful Deal Service Fee</option><option value="featured_listing">Featured Listing</option><option value="advertisement">Website Advertisement</option></select>
     <input id="incomeClientId" placeholder="Client ID (optional)">
     <input id="incomeListingId" placeholder="Listing ID (optional)">
     <input id="incomeAmount" type="number" min="1" step="1" placeholder="Amount (PKR)">
@@ -668,6 +666,17 @@ function setRole(role){
   }
 }
 
+function showPage(page){
+  const ids=["account","adminPanel","categories","postAd","listings"];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="none";});
+  const hero=document.querySelector(".digital-hero");if(hero)hero.style.display="none";
+  if(page==="home"){if(hero)hero.style.display="block";window.scrollTo({top:0,behavior:"smooth"});return;}
+  const target=document.getElementById(page);
+  if(target)target.style.display="block";
+  if(page==="account"&&currentUser&&currentClientProfile&&currentClientProfile.is_admin){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
+  if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
 function chooseAuthRole(role){
   currentRole=role;
   [ ["authBuyerBtn",role==="buyer","selected"],["authSellerBtn",role==="seller","selected"],["buyerBtn",role==="buyer","active"],["sellerBtn",role==="seller","active"] ].forEach(([id,on,cls])=>{const el=document.getElementById(id);if(el)el.classList.toggle(cls,on);});
@@ -684,7 +693,7 @@ function showError(id,error){
 function showAccount(){
   const account=document.getElementById("account");
   if(!account){console.warn("Account panel is missing.");return;}
-  account.style.display="block";account.scrollIntoView({behavior:"smooth"});
+  showPage("account");
 }
 function updateUser(){
   const status=document.getElementById("userStatus");
@@ -695,8 +704,7 @@ function updateUser(){
   const chip=document.getElementById("clientIdDisplay");
   if(chip){chip.style.display=currentUser&&currentClientId?"inline-flex":"none";chip.textContent=currentClientId?"Your permanent Client ID: "+currentClientId:"";}
   const panel=document.getElementById("adminPanel");
-  if(panel)panel.style.display=currentUser&&currentClientProfile&&currentClientProfile.is_admin?"block":"none";
-  const membershipButton=document.getElementById("membershipRequestButton");if(membershipButton)membershipButton.style.display=currentUser?"inline-block":"none";
+  if(panel)panel.style.display="none";
 }
 async function loadClientProfile(){
   currentClientProfile=null;currentClientId=null;
@@ -704,7 +712,6 @@ async function loadClientProfile(){
   const {data,error}=await db.from("client_profiles").select("client_id,is_admin").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.warn("Client profile not ready. Run the supplied SQL setup file.",error.message);updateUser();return;}
   currentClientProfile=data||null;currentClientId=data?data.client_id:null;updateUser();
-  const membershipButton=document.getElementById("membershipRequestButton");if(membershipButton)membershipButton.style.display=currentUser?"inline-block":"none";
   if(data&&data.is_admin){await adminLoadDashboard();}
 }
 async function loadCategories(){
@@ -803,9 +810,7 @@ async function getSellerId(){
 }
 function openPost(){
   if(!currentUser){showAccount();message("accountMessage","Please login before posting an advertisement.","#b42318");return;}
-  const section=document.getElementById("postAd");
-  section.style.display="block";
-  section.scrollIntoView({behavior:"smooth"});
+  showPage("postAd");
 }
 function selectedCategoryLabel(){
   const select=document.getElementById("adCategory");
@@ -982,7 +987,7 @@ function editAd(ad){
   renderAdImagePreview([]);
   document.getElementById("submitAdButton").textContent="Update Advertisement";
   document.getElementById("cancelEditButton").style.display="inline-block";
-  document.getElementById("postAd").style.display="block";
+  showPage("postAd");
   message("postMessage","Editing this advertisement. Upload a new photo only if you want to replace the current photo.","#12816f");
   document.getElementById("postAd").scrollIntoView({behavior:"smooth"});
 }
@@ -1110,12 +1115,6 @@ async function submitOffer(event){
   }finally{if(button){button.disabled=false;button.textContent="Send Offer";}}
 }
 
-async function requestSellerMembership(){
-  if(!currentUser||!currentClientId){alert("Please login first.");return;}
-  const {error}=await db.from("revenue_events").insert({user_id:currentUser.id,client_id:currentClientId,event_type:"seller_membership",amount:1000,status:"pending",note:"One-month Seller Membership request"});
-  if(error){alert("Membership request could not be sent: "+error.message+". Run the SQL setup file first.");return;}
-  alert("Membership request submitted. Admin will confirm payment and activation.");
-}
 async function requestFeaturedListing(ad){
   if(!currentUser||!currentClientId){alert("Please login. Your Client ID must be ready first.");return;}
   const {error}=await db.from("revenue_events").insert({user_id:currentUser.id,client_id:currentClientId,event_type:"featured_listing",listing_id:String(ad.id),amount:500,status:"pending",note:"7-day Featured Listing request"});
@@ -1124,15 +1123,14 @@ async function requestFeaturedListing(ad){
 }
 async function adminLoadDashboard(){
   if(!currentClientProfile||!currentClientProfile.is_admin)return;
-  const [income,pending,featured,members]=await Promise.all([
+  const [income,pending,featured]=await Promise.all([
     db.from("revenue_events").select("amount").eq("status","approved"),
     db.from("revenue_events").select("id",{count:"exact",head:true}).eq("status","pending"),
-    db.from("revenue_events").select("id",{count:"exact",head:true}).eq("event_type","featured_listing").eq("status","approved"),
-    db.from("revenue_events").select("id",{count:"exact",head:true}).eq("event_type","seller_membership").eq("status","approved")
+    db.from("revenue_events").select("id",{count:"exact",head:true}).eq("event_type","featured_listing").eq("status","approved")
   ]);
   const total=(income.data||[]).reduce((n,x)=>n+Number(x.amount||0),0);
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set("incomeTotal","Rs. "+total.toLocaleString("en-PK"));set("pendingTotal",pending.count||0);set("featuredTotal",featured.count||0);set("membershipTotal",members.count||0);
+  set("incomeTotal","Rs. "+total.toLocaleString("en-PK"));set("pendingTotal",pending.count||0);set("featuredTotal",featured.count||0);
   const {data:rows,error}=await db.from("revenue_events").select("*").order("created_at",{ascending:false}).limit(30);
   const box=document.getElementById("incomeRecords");if(!box)return;box.innerHTML="";
   if(error){box.textContent="Income records unavailable: "+error.message;return;}
@@ -1169,7 +1167,7 @@ async function adminApproveIncome(id){
 function filterCategory(categoryId){
   const filtered=allAds.filter(ad=>String(ad.caterory_id)===String(categoryId));
   renderAds(filtered);
-  document.getElementById("listings").scrollIntoView({behavior:"smooth"});
+  showPage("listings");
 }
 function showAds(){
   const term=document.getElementById("searchBox").value.toLowerCase().trim();
@@ -1179,7 +1177,7 @@ function showAds(){
     (ad.locations||"").toLowerCase().includes(term)
   );
   renderAds(filtered);
-  document.getElementById("listings").scrollIntoView({behavior:"smooth"});
+  showPage("listings");
 }
 async function start(){
   try{
@@ -1217,6 +1215,7 @@ async function start(){
   }
 }
 start();
+showPage("home");
 
 // Complete bilingual interface layer. Urdu changes labels and direction without changing stored data.
 function setLanguage(lang){

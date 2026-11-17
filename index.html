@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#142b45">
 <meta name="description" content="A&K Fair Mart — a marketplace to buy and sell property, vehicles, electronics, furniture, fashion and services in Pakistan.">
-<meta name="version" content="2026.11.16-1">
+<meta name="version" content="2026.11.16-2">
 <title>A&K FAIR MART | خرید و فروخت</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,6 +79,8 @@ footer{margin-top:25px;background:linear-gradient(120deg,#10243a,#214b68);color:
 footer h3{font-family:"Playfair Display",Georgia,serif;color:#f5d77d;font-size:25px;margin:0 0 7px}
 footer p{margin:6px;font-size:13px}
 .footerline{height:1px;background:#ffffff2b;max-width:500px;margin:18px auto}
+.listing-image-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.listing-image-gallery img{width:100%;height:145px;object-fit:cover;border-radius:10px}.listing-image-gallery img:first-child:nth-last-child(1){grid-column:1/-1;height:185px}
+.image-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin:8px 0 14px;text-align:left}.image-preview-grid img{width:100%;height:78px;object-fit:cover;border-radius:9px;border:1px solid #dce6ec}
 @media(max-width:600px){.choice-inner{justify-content:center}.language-choice,.role-choice{justify-content:center;width:100%}.lang-btn,.role-btn{padding:8px 11px}header{padding:20px 12px 25px}.logo{width:55px;height:55px;border-radius:16px}.logo span{font-size:18px}.tagline{letter-spacing:1.5px;font-size:9px}.hero{margin:15px 10px;padding:27px 14px}.searchrow{flex-direction:column}.searchrow .btn{width:100%}nav a{padding:9px 10px;font-size:12px}section{padding:20px 12px}.formbox{padding:19px 14px}.ads{grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:11px}.ad{padding:9px}.ad img{height:140px}.ad h3{font-size:15px}.price{font-size:17px!important}}
 
 /* DIGITAL 3D INTERFACE UPGRADE */
@@ -283,6 +285,7 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 .auth-or{display:flex;align-items:center;gap:12px;margin:19px 0;color:#d8e8f4;font-size:12px;font-weight:800}.auth-or span{height:1px;flex:1;background:#a6cce566}
 .auth-create{border:0;background:transparent;color:#e5f4ff;font-size:13px}.auth-create b{color:#ffdc67;text-decoration:underline;margin:0 5px}.auth-create strong{color:#ffdc67;font-size:23px;vertical-align:-2px}
 .auth-reset{margin-top:15px;padding:13px;border:1px solid #75dff477;border-radius:15px;background:#061a35}.auth-reset p{font-size:12px;color:#d3eaf5}.auth-social-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.auth-social{border:1px solid #8bdcf477;border-radius:13px;padding:12px 5px;background:#092747;color:#fff;font-size:12px;font-weight:850;cursor:pointer}.auth-social:hover{background:#10436d;transform:translateY(-1px)}.auth-phone-box{margin-top:13px;padding:13px;border:1px solid #75dff477;border-radius:15px;background:#061a35;text-align:left}.auth-phone-box p{font-size:12px;color:#d3eaf5;margin:0 0 8px}.auth-phone-box input{width:100%;box-sizing:border-box;border:1px solid #8bc7e788;border-radius:10px;padding:12px;margin:5px 0;background:#03152e;color:#fff}.auth-phone-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px}.auth-phone-actions button{border:1px solid #58d9f4;border-radius:10px;padding:10px 5px;background:#0b5680;color:#fff;font-size:11px;font-weight:800}.auth-logout{margin-top:13px;border:0;background:transparent;color:#b8d7e7;font-size:11px;text-decoration:underline}.auth-privacy{font-size:10px;color:#a7c9d9;margin:15px 0 0}.nexus-auth-card .notice{color:#fff;position:relative;z-index:2}
+.auth-email-only{margin:14px 0;padding:12px;border:1px solid #75dff477;border-radius:13px;background:#061a35;color:#d3eaf5;font-size:12px;line-height:1.6}
 @keyframes authOrbit{to{transform:rotate(360deg)}}
 @media(max-width:800px){.nexus-auth-shell{grid-template-columns:1fr;gap:42px;max-width:560px}.nexus-auth-showcase{text-align:center;padding:18px 8px}.auth-emblem{margin:25px auto}.auth-product-strip,.auth-benefits{justify-content:center}.nexus-auth-card{margin-top:8px}}
 @media(max-width:480px){.nexus-account-section{padding:30px 10px}.nexus-auth-card{padding:28px 17px 21px;border-radius:22px}.nexus-auth-card h2{font-size:25px}.auth-emblem{width:125px;height:125px}.auth-emblem span{font-size:42px}.auth-product-strip div{width:calc(50% - 6px)}.auth-benefits span{font-size:9px;padding:8px}}
@@ -332,6 +335,19 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 @media(max-width:760px){.hero-orbit{min-height:245px}.category-orbit{transform:scale(.82);inset:-8px 0}.cat-1{transform:translate(-50%,-50%) translate(0,-119px)}.cat-2{transform:translate(-50%,-50%) translate(70px,-96px)}.cat-3{transform:translate(-50%,-50%) translate(113px,-37px)}.cat-4{transform:translate(-50%,-50%) translate(113px,37px)}.cat-5{transform:translate(-50%,-50%) translate(70px,96px)}.cat-6{transform:translate(-50%,-50%) translate(0,119px)}.cat-7{transform:translate(-50%,-50%) translate(-70px,96px)}.cat-8{transform:translate(-50%,-50%) translate(-113px,37px)}.cat-9{transform:translate(-50%,-50%) translate(-113px,-37px)}.cat-10{transform:translate(-50%,-50%) translate(-70px,-96px)}}
 @media(max-width:430px){.hero-orbit{min-height:225px}.category-orbit{transform:scale(.70)}.orbit-cat{font-size:9px;padding:7px 8px}}
 @media(prefers-reduced-motion:reduce){.category-orbit{animation:none}}
+
+
+/* CLIENT ID, VIDEO AND REVENUE MODULE */
+.client-id-chip{display:inline-flex;align-items:center;gap:7px;background:#eaf8f5;color:#075e58;border:1px solid #b9e5dc;border-radius:999px;padding:7px 12px;font-weight:900;font-size:12px;margin:8px auto}
+#adminPanel{display:none;background:#f4f8fc;border:1px solid #dbe6ef;border-radius:18px;padding:18px;margin:18px auto;max-width:1050px;text-align:left}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.admin-stat{background:#fff;border:1px solid #e1e9ef;border-radius:13px;padding:14px}
+.admin-stat b{display:block;font-size:23px;color:#087f79;margin-top:5px}
+.admin-result{background:#fff;border:1px solid #e1e9ef;border-radius:12px;padding:12px;margin-top:10px;overflow-wrap:anywhere}
+.admin-result h4{margin:0 0 7px;color:#142b45}
+.video-preview{max-width:100%;max-height:220px;border-radius:12px;margin:8px 0}
+.premium-ribbon{display:inline-block;background:#fff2c5;color:#76520b;border:1px solid #efd17b;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:900}
+@media(max-width:600px){#adminPanel{padding:12px;margin:12px}.admin-grid{grid-template-columns:1fr 1fr}}
 
 </style>
 </head>
@@ -441,22 +457,7 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
       <div class="auth-input-wrap"><span>▣</span><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password (6+ characters)"></div>
       <button class="auth-forgot" type="button" onclick="forgotPassword()">Forgot Password?</button>
       <button class="auth-primary" type="button" onclick="signIn()">⇥ &nbsp; SIGN IN</button>
-      <div class="auth-or"><span></span> OR CONTINUE WITH <span></span></div>
-      <div class="auth-social-grid" aria-label="Social login options">
-        <button class="auth-social" type="button" onclick="signInWithProvider('google')">🌐 Google</button>
-        <button class="auth-social" type="button" onclick="signInWithProvider('facebook')">📘 Facebook</button>
-        <button class="auth-social" type="button" onclick="signInWithProvider('apple')"> Apple</button>
-      </div>
-      <div class="auth-phone-box">
-        <p><strong>📱 Login with Mobile Number</strong><br>Enter your number with country code, e.g. +923001234567</p>
-        <input id="loginPhone" type="tel" autocomplete="tel" placeholder="+92 300 1234567" aria-label="Mobile number with country code">
-        <input id="loginPhoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="SMS verification code (OTP)" aria-label="SMS verification code">
-        <div class="auth-phone-actions">
-          <button type="button" onclick="sendPhoneOtp()">Send OTP</button>
-          <button type="button" onclick="verifyPhoneOtp()">Verify &amp; Login</button>
-        </div>
-      </div>
-      <div class="auth-or"><span></span> OR <span></span></div>
+      <p class="auth-email-only">🔒 Sign in securely using your email address and password.</p>
       <button class="auth-create" type="button" onclick="signUp()">New to A&amp;K? <b>Create Account</b> <strong>›</strong></button>
       <div id="resetPanel" class="auth-reset" style="display:none">
         <p>Enter your new password after opening the reset link from your email.</p>
@@ -465,9 +466,35 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
       </div>
       <button class="auth-logout" type="button" onclick="signOut()">Logout</button>
       <div id="accountMessage" class="notice"></div>
+      <div id="clientIdDisplay" class="client-id-chip" style="display:none"></div>
+      <button id="membershipRequestButton" class="btn" type="button" style="display:none" onclick="requestSellerMembership()">Request Seller Membership — Rs. 1,000 / month</button>
       <p class="auth-privacy">🔒 Your personal contact details remain private</p>
     </div>
   </div>
+</section>
+
+<section id="adminPanel">
+  <div class="section-head"><h2>Admin Control Centre</h2><p>Private client lookup, offers and income records</p></div>
+  <div class="admin-grid">
+    <div class="admin-stat">Approved income <b id="incomeTotal">Rs. 0</b></div>
+    <div class="admin-stat">Pending requests <b id="pendingTotal">0</b></div>
+    <div class="admin-stat">Featured listings <b id="featuredTotal">0</b></div>
+    <div class="admin-stat">Active memberships <b id="membershipTotal">0</b></div>
+  </div>
+  <h3>Find Client by Client ID</h3>
+  <div class="searchrow"><input id="clientLookupInput" placeholder="Example: AKF-1234567890"><button class="btn dark" type="button" onclick="adminFindClient()">Search Client</button></div>
+  <div id="clientLookupResult" aria-live="polite"></div>
+  <h3>Record Income / Deal</h3>
+  <div class="admin-grid">
+    <select id="incomeType"><option value="successful_deal">Successful Deal Service Fee</option><option value="featured_listing">Featured Listing</option><option value="seller_membership">Seller Membership</option><option value="advertisement">Website Advertisement</option></select>
+    <input id="incomeClientId" placeholder="Client ID (optional)">
+    <input id="incomeListingId" placeholder="Listing ID (optional)">
+    <input id="incomeAmount" type="number" min="1" step="1" placeholder="Amount (PKR)">
+  </div>
+  <input id="incomeNote" placeholder="Note / reference">
+  <button class="btn teal" type="button" onclick="adminRecordIncome()">Save Income Record</button>
+  <div id="adminMessage" class="notice"></div>
+  <div id="incomeRecords"></div>
 </section>
 
 <section id="categories">
@@ -544,8 +571,14 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
       <input id="sellerAddress" placeholder="Full address / مکمل پتہ">
       <p class="small">Your phone number and full address are kept off public advertisement cards. Buyers see the public listing only.</p>
     </div>
-    <label class="small" for="adImage">Upload product photo (optional)</label>
-    <input id="adImage" type="file" accept="image/*">
+    <label class="small" for="adImage">Upload product photos (up to 10 pictures)</label>
+    <input id="adImage" type="file" accept="image/*" multiple>
+    <p class="small">You can select up to 10 images. Maximum 5 MB per image. On editing, newly selected pictures are added to existing pictures.</p>
+    <div id="adImagePreview" class="image-preview-grid" aria-live="polite"></div>
+    <label class="small" for="adVideo">Upload one product video (maximum 1 video)</label>
+    <input id="adVideo" type="file" accept="video/*">
+    <p class="small">One video per advertisement, maximum 30 MB. Video and photos are stored separately.</p>
+    <div id="adVideoPreview"></div>
     <button class="btn dark" id="submitAdButton" onclick="postAd()">Submit Advertisement</button>
     <button class="btn" id="cancelEditButton" type="button" onclick="cancelEdit()" style="display:none">Cancel Edit</button>
     <div id="postMessage" class="notice"></div>
@@ -591,7 +624,8 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
 // Add the administrator login email here to enable admin deletion of every listing.
-const ADMIN_EMAILS = [];
+const ADMIN_EMAILS = []; // Admin access is controlled by the client_profiles.is_admin flag in Supabase.
+function isCurrentAdmin(){return !!(currentClientProfile&&currentClientProfile.is_admin)||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||"").toLowerCase());}
 // Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
 // require a server-side function and are intentionally not claimed as active yet.
 let db = null;
@@ -601,6 +635,8 @@ let allCategories = [];
 let currentRole = "buyer";
 let currentLanguage = "en";
 let editingAdId = null;
+let currentClientProfile = null;
+let currentClientId = null;
 
 function setRole(role){
   currentRole=role;
@@ -635,7 +671,24 @@ function showAccount(){
 }
 function updateUser(){
   const status=document.getElementById("userStatus");
-  if(status) status.textContent=currentUser ? "Logged in: "+(currentUser.email||"account") : "You are browsing as a guest. Login to post an ad.";
+  if(status) status.textContent=currentUser ? "Logged in: "+(currentUser.email||"account")+(currentClientId?" | Client ID: "+currentClientId:"") : "You are browsing as a guest. Login to post an ad.";
+  // Keep the existing login/sign-up flow unchanged; show Logout only for an active session.
+  const logoutButton=document.querySelector(".auth-logout");
+  if(logoutButton) logoutButton.style.display=currentUser?"inline-block":"none";
+  const chip=document.getElementById("clientIdDisplay");
+  if(chip){chip.style.display=currentUser&&currentClientId?"inline-flex":"none";chip.textContent=currentClientId?"Your permanent Client ID: "+currentClientId:"";}
+  const panel=document.getElementById("adminPanel");
+  if(panel)panel.style.display=currentUser&&currentClientProfile&&currentClientProfile.is_admin?"block":"none";
+  const membershipButton=document.getElementById("membershipRequestButton");if(membershipButton)membershipButton.style.display=currentUser?"inline-block":"none";
+}
+async function loadClientProfile(){
+  currentClientProfile=null;currentClientId=null;
+  if(!currentUser||!db){updateUser();return;}
+  const {data,error}=await db.from("client_profiles").select("client_id,is_admin").eq("user_id",currentUser.id).maybeSingle();
+  if(error){console.warn("Client profile not ready. Run the supplied SQL setup file.",error.message);updateUser();return;}
+  currentClientProfile=data||null;currentClientId=data?data.client_id:null;updateUser();
+  const membershipButton=document.getElementById("membershipRequestButton");if(membershipButton)membershipButton.style.display=currentUser?"inline-block":"none";
+  if(data&&data.is_admin){await adminLoadDashboard();}
 }
 async function loadCategories(){
   const grid=document.getElementById("categoryGrid");
@@ -669,7 +722,7 @@ async function signUp(){
   if(!email||password.length<6){message("accountMessage","Enter a valid email and password of at least 6 characters.","#b42318");return;}
   const {data,error}=await db.auth.signUp({email,password});
   if(error){showError("accountMessage",error);return;}
-  if(data.session){currentUser=data.session.user;updateUser();}
+  if(data.session){currentUser=data.session.user;await loadClientProfile();}
   message("accountMessage","Account request submitted. If email confirmation is enabled, check your inbox.","#12816f");
 }
 async function signIn(){
@@ -678,38 +731,8 @@ async function signIn(){
   if(!email||!password){message("accountMessage","Enter your email and password.","#b42318");return;}
   const {data,error}=await db.auth.signInWithPassword({email,password});
   if(error){showError("accountMessage",error);return;}
-  currentUser=data.user;updateUser();
+  currentUser=data.user;await loadClientProfile();
   message("accountMessage","Login successful.","#12816f");
-}
-async function signInWithProvider(provider){
-  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
-  try{
-    const redirectTo=window.location.origin+window.location.pathname;
-    const {error}=await db.auth.signInWithOAuth({provider,options:{redirectTo}});
-    if(error)throw error;
-  }catch(error){showError("accountMessage",error);}
-}
-async function sendPhoneOtp(){
-  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
-  const phone=document.getElementById("loginPhone").value.trim();
-  if(!/^\+[1-9]\d{7,14}$/.test(phone)){message("accountMessage","Enter a valid mobile number with country code, e.g. +923001234567.","#b42318");return;}
-  try{
-    const {error}=await db.auth.signInWithOtp({phone,options:{shouldCreateUser:true}});
-    if(error)throw error;
-    message("accountMessage","SMS verification code sent. Check your mobile and enter the OTP below.","#12816f");
-  }catch(error){showError("accountMessage",error);}
-}
-async function verifyPhoneOtp(){
-  if(!db){message("accountMessage","Website connection is not ready. Please refresh and try again.","#b42318");return;}
-  const phone=document.getElementById("loginPhone").value.trim();
-  const token=document.getElementById("loginPhoneOtp").value.trim();
-  if(!/^\+[1-9]\d{7,14}$/.test(phone)||!/^\d{6}$/.test(token)){message("accountMessage","Enter your mobile number and the 6-digit SMS code.","#b42318");return;}
-  try{
-    const {data,error}=await db.auth.verifyOtp({phone,token,type:"sms"});
-    if(error)throw error;
-    currentUser=data.user;updateUser();
-    message("accountMessage","Mobile number verified. You are now logged in.","#12816f");
-  }catch(error){showError("accountMessage",error);}
 }
 function showPasswordRecovery(messageText="Reset link verified. Enter your new password below."){
   const panel=document.getElementById("resetPanel");
@@ -747,7 +770,7 @@ async function saveNewPassword(){
 async function signOut(){
   const {error}=await db.auth.signOut();
   if(error){showError("accountMessage",error);return;}
-  currentUser=null;updateUser();
+  currentUser=null;currentClientProfile=null;currentClientId=null;updateUser();
   message("accountMessage","You have logged out.","#12816f");
 }
 async function getSellerId(){
@@ -779,7 +802,7 @@ function togglePropertyFields(){
   if(vehicle)vehicle.style.display=isVehicleCategory()?"block":"none";
 }
 function propertyDescriptionParts(value){
-  const source=value||"",fields={};
+  const source=cleanListingDescription(value||""),fields={};
   const markers=[/\n?\[PROPERTY DETAILS\][\s\S]*?\[\/PROPERTY DETAILS\]\n?/,/\n?\[VEHICLE DETAILS\][\s\S]*?\[\/VEHICLE DETAILS\]\n?/];
   let description=source;
   markers.forEach(marker=>{const match=description.match(marker);if(match){match[0].split("\n").slice(1).forEach(line=>{const i=line.indexOf(":");if(i>0)fields[line.slice(0,i).trim()]=line.slice(i+1).trim();});description=description.replace(marker,"");}});
@@ -812,6 +835,42 @@ function fillPropertyFieldsFromDescription(description){
   const features=(parsed.Features||"").split(/,\s*/);
   document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=features.includes(x.value));
 }
+function parseListingImages(value){
+  if(!value)return [];
+  if(Array.isArray(value))return value.filter(x=>typeof x==="string"&&x.trim()).slice(0,10);
+  if(typeof value!=="string")return [];
+  const trimmed=value.trim();
+  if(!trimmed)return [];
+  if(trimmed.startsWith("[")){try{const parsed=JSON.parse(trimmed);if(Array.isArray(parsed))return parsed.filter(x=>typeof x==="string"&&x.trim()).slice(0,10);}catch(e){}}
+  return [trimmed];
+}
+function renderAdImagePreview(urls){
+  const box=document.getElementById("adImagePreview");if(!box)return;
+  box.innerHTML="";
+  (urls||[]).slice(0,10).forEach(url=>{const img=document.createElement("img");img.src=url;img.alt="Selected listing photo";box.appendChild(img);});
+}
+function previewSelectedAdImages(){
+  const input=document.getElementById("adImage");if(!input)return;
+  const files=Array.from(input.files||[]);
+  if(files.length>10){message("postMessage","You can select a maximum of 10 pictures.","#b42318");input.value="";renderAdImagePreview([]);return;}
+  const box=document.getElementById("adImagePreview");if(!box)return;box.innerHTML="";
+  files.forEach(file=>{if(!file.type.startsWith("image/"))return;const img=document.createElement("img");img.alt=file.name;img.src=URL.createObjectURL(file);box.appendChild(img);});
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  const input=document.getElementById("adImage");if(input)input.addEventListener("change",previewSelectedAdImages);
+  const video=document.getElementById("adVideo");if(video)video.addEventListener("change",previewSelectedAdVideo);
+});
+function previewSelectedAdVideo(){
+  const input=document.getElementById("adVideo"),box=document.getElementById("adVideoPreview");if(!input||!box)return;box.innerHTML="";
+  const file=input.files&&input.files[0];if(!file)return;
+  if(!file.type.startsWith("video/")){message("postMessage","Please select a video file only.","#b42318");input.value="";return;}
+  if(file.size>30*1024*1024){message("postMessage","Video must be 30 MB or smaller.","#b42318");input.value="";return;}
+  const video=document.createElement("video");video.className="video-preview";video.controls=true;video.src=URL.createObjectURL(file);box.appendChild(video);
+}
+function parseListingVideo(description){const m=String(description||"").match(/\[AK_VIDEO\]([\s\S]*?)\[\/AK_VIDEO\]/);return m?m[1].trim():"";}
+function cleanListingDescription(description){return String(description||"").replace(/\n?\[AK_VIDEO\][\s\S]*?\[\/AK_VIDEO\]\n?/g,"").trim();}
+
+
 async function postAd(){
   const button=document.getElementById("submitAdButton");
   if(!currentUser){message("postMessage","Please login first.","#b42318");showAccount();return;}
@@ -822,27 +881,45 @@ async function postAd(){
   const description=buildPropertyDescription(descriptionInput);
   const price=document.getElementById("adPrice").value;
   const locationText=document.getElementById("adLocation").value.trim();
-  const file=document.getElementById("adImage").files[0];
+  const files=Array.from(document.getElementById("adImage").files||[]);
+  const videoFile=(document.getElementById("adVideo").files||[])[0]||null;
   if(!title||!category||!description||!price||!locationText){message("postMessage","Please fill in title, category, description, price and location.","#b42318");return;}
-  if(file&&!file.type.startsWith("image/")){message("postMessage","Please select a valid image file.","#b42318");return;}
-  if(file&&file.size>5*1024*1024){message("postMessage","Image must be 5 MB or smaller.","#b42318");return;}
+  if(files.length>10){message("postMessage","You can upload a maximum of 10 pictures per advertisement.","#b42318");return;}
+  if(videoFile&&(!videoFile.type.startsWith("video/")||videoFile.size>30*1024*1024)){message("postMessage","Select one video file up to 30 MB.","#b42318");return;}
+  if(files.some(file=>!file.type.startsWith("image/"))){message("postMessage","Please select image files only.","#b42318");return;}
+  if(files.some(file=>file.size>5*1024*1024)){message("postMessage","Each image must be 5 MB or smaller.","#b42318");return;}
   const wasEditing=editingAdId!==null;
   button.disabled=true;button.textContent=wasEditing?"Updating...":"Submitting...";
   try{
-    let imageUrl=wasEditing?((allAds.find(a=>String(a.id)===String(editingAdId))||{}).image_url||null):null;
+    const existingAd=wasEditing?(allAds.find(a=>String(a.id)===String(editingAdId))||{}):{};
+    let imageUrls=parseListingImages(existingAd.image_url);
+    let videoUrl=parseListingVideo(existingAd.description||"");
+    if(imageUrls.length+files.length>10)throw new Error("This advertisement can have up to 10 pictures total. It already has "+imageUrls.length+" picture(s), so select no more than "+(10-imageUrls.length)+" new picture(s).");
     let sellerId=null;
     if(!wasEditing)sellerId=await getSellerId();
-    if(file){
+    for(const file of files){
       const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
-      const filePath=currentUser.id+"/"+Date.now()+"."+ext;
+      const safeName=(file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-70)||("photo."+ext));
+      const filePath=currentUser.id+"/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+"_"+safeName;
       const {error:uploadError}=await db.storage.from("listing-images").upload(filePath,file,{upsert:false,contentType:file.type});
       if(uploadError)throw new Error("Image upload failed: "+uploadError.message+" (Check that the listing-images storage bucket exists and allows uploads.)");
-      const {data:publicData}=db.storage.from("listing-images").getPublicUrl(filePath);imageUrl=publicData.publicUrl;
+      const {data:publicData}=db.storage.from("listing-images").getPublicUrl(filePath);
+      imageUrls.push(publicData.publicUrl);
     }
-    const listingData={listing_tittle:title,caterory_id:Number(category),description:description,price:Number(price),locations:locationText,image_url:imageUrl,status:"active"};
+    imageUrls=imageUrls.slice(0,10);
+    if(videoFile){
+      const ext=(videoFile.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4";
+      const path=currentUser.id+"/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+"."+ext;
+      const {error:videoError}=await db.storage.from("listing-videos").upload(path,videoFile,{upsert:false,contentType:videoFile.type});
+      if(videoError)throw new Error("Video upload failed: "+videoError.message+". Check the listing-videos bucket policies.");
+      videoUrl=db.storage.from("listing-videos").getPublicUrl(path).data.publicUrl;
+    }
+    const finalDescription=description+(videoUrl?"\n\n[AK_VIDEO]"+videoUrl+"[/AK_VIDEO]":"");
+    const imageUrl=imageUrls.length?JSON.stringify(imageUrls):null;
+    const listingData={listing_tittle:title,caterory_id:Number(category),description:finalDescription,price:Number(price),locations:locationText,image_url:imageUrl,status:"active"};
     if(wasEditing){
       let query=db.from("listing").update(listingData).eq("id",editingAdId);
-      const isAdmin=ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser.email||"").toLowerCase());
+      const isAdmin=isCurrentAdmin();
       if(!isAdmin)query=query.eq("user_id",currentUser.id);
       const {error}=await query;
       if(error)throw new Error(error.message+". The listing owner may need an UPDATE policy in Supabase RLS.");
@@ -853,7 +930,7 @@ async function postAd(){
       message("postMessage","Your advertisement has been posted successfully!","#12816f");
     }
     cancelEdit(true);
-    ["adTitle","adDescription","adPrice","adLocation","adImage","sellerName","sellerMobile","sellerAddress"].forEach(id=>document.getElementById(id).value="");
+    ["adTitle","adDescription","adPrice","adLocation","adImage","adVideo","sellerName","sellerMobile","sellerAddress"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("adCategory").value="";
     fillPropertyFieldsFromDescription("");
     document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=false);
@@ -865,19 +942,20 @@ async function postAd(){
 }
 function editAd(ad){
   if(!currentUser){showAccount();message("accountMessage","Please login to edit your advertisement.","#b42318");return;}
-  const isAdmin=ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser.email||"").toLowerCase());
+  const isAdmin=isCurrentAdmin();
   if(ad.user_id!==currentUser.id&&!isAdmin){alert("You can only edit your own advertisement.");return;}
   editingAdId=ad.id;currentRole="seller";
   document.getElementById("buyerBtn").classList.remove("active");document.getElementById("sellerBtn").classList.add("active");
   document.getElementById("adTitle").value=ad.listing_tittle||"";
   document.getElementById("adCategory").value=String(ad.caterory_id??"");
   const parsedDescription=propertyDescriptionParts(ad.description||"");
-  document.getElementById("adDescription").value=parsedDescription.description;
+  document.getElementById("adDescription").value=cleanListingDescription(parsedDescription.description);
   fillPropertyFieldsFromDescription(ad.description||"");
   togglePropertyFields();
   document.getElementById("adPrice").value=ad.price??"";
   document.getElementById("adLocation").value=ad.locations||"";
   document.getElementById("adImage").value="";
+  renderAdImagePreview([]);
   document.getElementById("submitAdButton").textContent="Update Advertisement";
   document.getElementById("cancelEditButton").style.display="inline-block";
   document.getElementById("postAd").style.display="block";
@@ -886,8 +964,9 @@ function editAd(ad){
 }
 function cancelEdit(silent=false){
   editingAdId=null;
-  ["adTitle","adDescription","adPrice","adLocation","adImage"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  ["adTitle","adDescription","adPrice","adLocation","adImage","adVideo"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
   const category=document.getElementById("adCategory");if(category)category.value="";
+  renderAdImagePreview([]);const vp=document.getElementById("adVideoPreview");if(vp)vp.innerHTML="";
   fillPropertyFieldsFromDescription("");document.querySelectorAll('input[name="propertyFeature"]').forEach(x=>x.checked=false);document.querySelectorAll('#vehicleFields input,#vehicleFields select').forEach(x=>x.value="");togglePropertyFields();
   const button=document.getElementById("submitAdButton");if(button){button.textContent="Submit Advertisement";button.disabled=false;}
   const cancel=document.getElementById("cancelEditButton");if(cancel)cancel.style.display="none";
@@ -900,6 +979,9 @@ async function loadAds(){
   const {data,error}=await db.from("listing").select("*").eq("status","active").order("created_at",{ascending:false});
   if(error){grid.innerHTML='<div class="empty">Advertisements could not be loaded: '+escapeHtml(error.message)+'</div>';return;}
   allAds=data||[];
+  const {data:featuredRows}=await db.from("featured_listings").select("listing_id").gt("expires_at",new Date().toISOString());
+  const featuredIds=new Set((featuredRows||[]).map(x=>String(x.listing_id)));
+  allAds.forEach(ad=>{ad.is_featured=featuredIds.has(String(ad.id));});
   renderAds(allAds);
 }
 function renderAds(ads){
@@ -910,10 +992,11 @@ function renderAds(ads){
   ads.forEach(ad=>{
     const card=document.createElement("article");
     card.className="ad";
-    if(ad.image_url){
-      const img=document.createElement("img");
-      img.src=ad.image_url;img.alt=ad.listing_tittle||"Advertisement";img.loading="lazy";
-      card.appendChild(img);
+    const adImages=parseListingImages(ad.image_url);
+    if(adImages.length){
+      const gallery=document.createElement("div");gallery.className="listing-image-gallery";
+      adImages.forEach((url,index)=>{const img=document.createElement("img");img.src=url;img.alt=(ad.listing_tittle||"Advertisement")+" photo "+(index+1);img.loading="lazy";gallery.appendChild(img);});
+      card.appendChild(gallery);
     }else{
       const placeholder=document.createElement("div");
       placeholder.style.cssText="height:150px;border-radius:12px;background:linear-gradient(135deg,#e9f3f2,#fff3d6);display:grid;place-items:center;font-size:42px";
@@ -924,11 +1007,13 @@ function renderAds(ads){
     const price=document.createElement("p");
     price.className="price";price.textContent=ad.price!=null?"Rs. "+Number(ad.price).toLocaleString("en-PK"):"Contact for price";card.appendChild(price);
     const desc=document.createElement("p");
-    desc.textContent=ad.description||"";card.appendChild(desc);
+    desc.textContent=cleanListingDescription(ad.description||"");card.appendChild(desc);
+    const videoUrl=parseListingVideo(ad.description||"");if(videoUrl){const video=document.createElement("video");video.className="video-preview";video.controls=true;video.preload="metadata";video.src=videoUrl;card.appendChild(video);}
+    if(ad.is_featured===true){const ribbon=document.createElement("span");ribbon.className="premium-ribbon";ribbon.textContent="⭐ FEATURED";card.appendChild(ribbon);}
     const loc=document.createElement("p");
     loc.className="small";loc.textContent="📍 "+(ad.locations||"Location not specified");card.appendChild(loc);
     const offerButton=document.createElement("button");offerButton.type="button";offerButton.className="offer-btn";offerButton.textContent="💬 Make an Offer / آفر دیں";offerButton.onclick=()=>openOffer(ad);card.appendChild(offerButton);
-    const isAdmin=currentUser && ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser.email||"").toLowerCase());
+    const isAdmin=currentUser && isCurrentAdmin();
     if(currentUser && (ad.user_id===currentUser.id || isAdmin)){
       const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px";
       const edit=document.createElement("button");edit.type="button";edit.className="btn teal";edit.textContent="✏️ Edit Post / ترمیم";edit.onclick=()=>editAd(ad);actions.appendChild(edit);
@@ -940,7 +1025,7 @@ function renderAds(ads){
 }
 async function deleteAd(adId,ownerId){
   if(!currentUser){message("userStatus","Please login first.","#b42318");return;}
-  const isAdmin=ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser.email||"").toLowerCase());
+  const isAdmin=isCurrentAdmin();
   if(ownerId!==currentUser.id && !isAdmin){alert("You can only delete your own advertisement.");return;}
   if(!confirm("Delete this advertisement permanently? / کیا آپ یہ اشتہار حذف کرنا چاہتے ہیں؟"))return;
   let query=db.from("listing").delete().eq("id",adId);
@@ -1001,6 +1086,62 @@ async function submitOffer(event){
   }finally{if(button){button.disabled=false;button.textContent="Send Offer";}}
 }
 
+async function requestSellerMembership(){
+  if(!currentUser||!currentClientId){alert("Please login first.");return;}
+  const {error}=await db.from("revenue_events").insert({user_id:currentUser.id,client_id:currentClientId,event_type:"seller_membership",amount:1000,status:"pending",note:"One-month Seller Membership request"});
+  if(error){alert("Membership request could not be sent: "+error.message+". Run the SQL setup file first.");return;}
+  alert("Membership request submitted. Admin will confirm payment and activation.");
+}
+async function requestFeaturedListing(ad){
+  if(!currentUser||!currentClientId){alert("Please login. Your Client ID must be ready first.");return;}
+  const {error}=await db.from("revenue_events").insert({user_id:currentUser.id,client_id:currentClientId,event_type:"featured_listing",listing_id:String(ad.id),amount:500,status:"pending",note:"7-day Featured Listing request"});
+  if(error){alert("Request could not be sent: "+error.message+". Run the SQL setup file first.");return;}
+  alert("Featured Listing request submitted. Admin will confirm payment and activation.");
+}
+async function adminLoadDashboard(){
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  const [income,pending,featured,members]=await Promise.all([
+    db.from("revenue_events").select("amount").eq("status","approved"),
+    db.from("revenue_events").select("id",{count:"exact",head:true}).eq("status","pending"),
+    db.from("revenue_events").select("id",{count:"exact",head:true}).eq("event_type","featured_listing").eq("status","approved"),
+    db.from("revenue_events").select("id",{count:"exact",head:true}).eq("event_type","seller_membership").eq("status","approved")
+  ]);
+  const total=(income.data||[]).reduce((n,x)=>n+Number(x.amount||0),0);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set("incomeTotal","Rs. "+total.toLocaleString("en-PK"));set("pendingTotal",pending.count||0);set("featuredTotal",featured.count||0);set("membershipTotal",members.count||0);
+  const {data:rows,error}=await db.from("revenue_events").select("*").order("created_at",{ascending:false}).limit(30);
+  const box=document.getElementById("incomeRecords");if(!box)return;box.innerHTML="";
+  if(error){box.textContent="Income records unavailable: "+error.message;return;}
+  (rows||[]).forEach(row=>{const item=document.createElement("div");item.className="admin-result";const title=document.createElement("b");title.textContent=(row.event_type||"income").replaceAll("_"," ")+" — Rs. "+Number(row.amount||0).toLocaleString("en-PK");const detail=document.createElement("p");detail.textContent="Client: "+(row.client_id||"—")+" | Status: "+row.status+" | "+(row.note||"");item.append(title,detail);if(row.status==="pending"){const btn=document.createElement("button");btn.className="btn teal";btn.textContent="Approve payment";btn.onclick=()=>adminApproveIncome(row.id);item.appendChild(btn);}box.appendChild(item);});
+}
+async function adminFindClient(){
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  const id=document.getElementById("clientLookupInput").value.trim().toUpperCase(),box=document.getElementById("clientLookupResult");
+  if(!id){box.textContent="Enter a Client ID.";return;}box.textContent="Searching...";
+  const {data:profile,error}=await db.from("client_profiles").select("client_id,user_id,created_at").eq("client_id",id).maybeSingle();
+  if(error||!profile){box.textContent=error?"Search failed: "+error.message:"No client found with that ID.";return;}
+  const [listings,buyerOffers]=await Promise.all([db.from("listing").select("id,listing_tittle,price,status,created_at").eq("user_id",profile.user_id).order("created_at",{ascending:false}),db.from("offers").select("id,listing_title,offered_price,status,created_at").eq("buyer_id",profile.user_id).order("created_at",{ascending:false})]);
+  const listingIds=(listings.data||[]).map(x=>String(x.id));
+  const sellerOffers=listingIds.length?(await db.from("offers").select("id,listing_title,offered_price,status,created_at").in("listing_id",listingIds).order("created_at",{ascending:false})).data||[]:[];
+  box.innerHTML="";const head=document.createElement("div");head.className="admin-result";const h=document.createElement("h4");h.textContent="Client "+profile.client_id;const meta=document.createElement("p");meta.textContent="Account created: "+new Date(profile.created_at).toLocaleDateString();head.append(h,meta);box.appendChild(head);
+  [["Seller Listings",listings.data||[],"listing_tittle","price"],["Buyer Offers",buyerOffers.data||[],"listing_title","offered_price"],["Offers Received on Seller Listings",sellerOffers,"listing_title","offered_price"]].forEach(([label,items,name,amount])=>{const wrap=document.createElement("div");wrap.className="admin-result";const title=document.createElement("h4");title.textContent=label+" ("+items.length+")";wrap.appendChild(title);items.forEach(x=>{const p=document.createElement("p");p.textContent=(x[name]||"Record")+" | Rs. "+Number(x[amount]||0).toLocaleString("en-PK")+" | "+(x.status||"");wrap.appendChild(p);});box.appendChild(wrap);});
+}
+async function adminRecordIncome(){
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  const amount=Number(document.getElementById("incomeAmount").value),clientId=document.getElementById("incomeClientId").value.trim().toUpperCase()||null;
+  if(!Number.isFinite(amount)||amount<=0){message("adminMessage","Enter a valid amount in PKR.","#b42318");return;}
+  const payload={event_type:document.getElementById("incomeType").value,client_id:clientId,listing_id:document.getElementById("incomeListingId").value.trim()||null,amount,status:"approved",note:document.getElementById("incomeNote").value.trim()||"Admin-entered income"};
+  const {error}=await db.from("revenue_events").insert(payload);if(error){message("adminMessage","Could not save: "+error.message,"#b42318");return;}
+  ["incomeAmount","incomeClientId","incomeListingId","incomeNote"].forEach(id=>document.getElementById(id).value="");message("adminMessage","Income record saved.","#12816f");await adminLoadDashboard();
+}
+async function adminApproveIncome(id){
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  const {data:event,error:readError}=await db.from("revenue_events").select("*").eq("id",id).single();if(readError){alert("Could not load request: "+readError.message);return;}
+  const {error}=await db.from("revenue_events").update({status:"approved"}).eq("id",id);if(error){alert("Approval failed: "+error.message);return;}
+  if(event.event_type==="featured_listing"&&event.listing_id){const expires=new Date(Date.now()+7*24*60*60*1000).toISOString();const {error:featureError}=await db.from("featured_listings").upsert({listing_id:String(event.listing_id),expires_at:expires});if(featureError)console.warn("Revenue approved but featured badge could not be activated:",featureError.message);}
+  await adminLoadDashboard();
+}
+
 function filterCategory(categoryId){
   const filtered=allAds.filter(ad=>String(ad.caterory_id)===String(categoryId));
   renderAds(filtered);
@@ -1036,7 +1177,7 @@ async function start(){
     const {data,error}=await db.auth.getSession();
     if(error)throw error;
     currentUser=data&&data.session?data.session.user:null;
-    updateUser();
+    await loadClientProfile();
     // Some browsers restore the recovery session from the URL hash after page load.
     if(/type=recovery|access_token=/.test(window.location.hash||"")){
       setTimeout(()=>showPasswordRecovery("Password reset link opened. Enter your new password below."),250);

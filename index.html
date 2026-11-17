@@ -691,7 +691,7 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
 // Add the administrator login email here to enable admin deletion of every listing.
-const ADMIN_EMAILS = []; // Admin access is controlled by the client_profiles.is_admin flag in Supabase.
+const ADMIN_EMAILS = ["arbab.khalidrasheed@gmail.com"]; // Admin login email; Supabase RLS must also grant admin delete permission.
 function isCurrentAdmin(){return !!(currentClientProfile&&currentClientProfile.is_admin)||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||"").toLowerCase());}
 // Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
 // require a server-side function and are intentionally not claimed as active yet.
@@ -725,7 +725,7 @@ function showPage(page){
   if(page==="home"){if(hero)hero.style.display="block";window.scrollTo({top:0,behavior:"smooth"});return;}
   const target=document.getElementById(page);
   if(target)target.style.display="block";
-  if(page==="account"&&currentUser&&currentClientProfile&&currentClientProfile.is_admin){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
+  if(page==="account"&&currentUser&&isCurrentAdmin()){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
   if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
@@ -756,7 +756,7 @@ function updateUser(){
   const chip=document.getElementById("clientIdDisplay");
   if(chip){chip.style.display=currentUser&&currentClientId?"inline-flex":"none";chip.textContent=currentClientId?"Your permanent Client ID: "+currentClientId:"";}
   const panel=document.getElementById("adminPanel");
-  if(panel)panel.style.display="none";
+  if(panel)panel.style.display=(currentUser&&isCurrentAdmin()&&document.getElementById("account")?.style.display==="block")?"block":"none";
 }
 async function loadClientProfile(){
   currentClientProfile=null;currentClientId=null;
@@ -764,7 +764,7 @@ async function loadClientProfile(){
   const {data,error}=await db.from("client_profiles").select("client_id,is_admin").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.warn("Client profile not ready. Run the supplied SQL setup file.",error.message);updateUser();return;}
   currentClientProfile=data||null;currentClientId=data?data.client_id:null;updateUser();
-  if(data&&data.is_admin){await adminLoadDashboard();}
+  if(isCurrentAdmin()){await adminLoadDashboard();}
 }
 async function loadCategories(){
   const grid=document.getElementById("categoryGrid");
@@ -1113,12 +1113,40 @@ async function deleteAd(adId,ownerId){
   const isAdmin=isCurrentAdmin();
   if(ownerId!==currentUser.id && !isAdmin){alert("You can only delete your own advertisement.");return;}
   if(!confirm("Delete this advertisement permanently? / کیا آپ یہ اشتہار حذف کرنا چاہتے ہیں؟"))return;
-  let query=db.from("listing").delete().eq("id",adId);
-  if(!isAdmin)query=query.eq("user_id",currentUser.id);
-  const {error}=await query;
-  if(error){alert("Delete failed: "+error.message+". Check listing DELETE RLS policy.");return;}
-  message("postMessage","Advertisement deleted successfully.","#12816f");
-  await loadAds();
+  try{
+    let query=db.from("listing").delete().eq("id",adId).select("id");
+    if(!isAdmin)query=query.eq("user_id",currentUser.id);
+    const {data,error}=await query;
+    if(error){
+      alert("اشتہار حذف نہیں ہوا۔\n\nDatabase permission error: "+error.message+"\n\nSupabase میں listing table کے لیے DELETE policy فعال کرنا ضروری ہے۔");
+      return;
+    }
+    if(!data || data.length===0){
+      alert(`اشتہار حذف نہیں ہوا کیونکہ Supabase نے DELETE کی اجازت نہیں دی۔
+
+اپنے Supabase Dashboard → SQL Editor میں یہ SQL چلائیں:
+
+update public.client_profiles cp
+set is_admin = true
+from auth.users u
+where cp.user_id = u.id
+  and lower(u.email) = lower('arbab.khalidrasheed@gmail.com');
+
+create policy "Admins can delete any listing" on public.listing
+for delete to authenticated
+using (exists (
+  select 1 from public.client_profiles cp
+  where cp.user_id = auth.uid() and cp.is_admin = true
+));
+
+اس کے بعد Admin اکاؤنٹ سے دوبارہ Login کریں۔`);
+      return;
+    }
+    message("postMessage","Advertisement deleted successfully.","#12816f");
+    await loadAds();
+  }catch(err){
+    alert("Delete failed: "+(err?.message||String(err)));
+  }
 }
 
 
@@ -1216,7 +1244,7 @@ async function requestFeaturedListing(ad){
   alert("Featured Listing request submitted. Admin will confirm payment and activation.");
 }
 async function adminLoadDashboard(){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const [income,pending,featured]=await Promise.all([
     db.from("revenue_events").select("amount").eq("status","approved"),
     db.from("revenue_events").select("id",{count:"exact",head:true}).eq("status","pending"),
@@ -1231,7 +1259,7 @@ async function adminLoadDashboard(){
   (rows||[]).forEach(row=>{const item=document.createElement("div");item.className="admin-result";const title=document.createElement("b");title.textContent=(row.event_type||"income").replaceAll("_"," ")+" — Rs. "+Number(row.amount||0).toLocaleString("en-PK");const detail=document.createElement("p");detail.textContent="Client: "+(row.client_id||"—")+" | Status: "+row.status+" | "+(row.note||"");item.append(title,detail);if(row.status==="pending"){const btn=document.createElement("button");btn.className="btn teal";btn.textContent="Approve payment";btn.onclick=()=>adminApproveIncome(row.id);item.appendChild(btn);}box.appendChild(item);});
 }
 async function adminFindClient(){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const id=document.getElementById("clientLookupInput").value.trim().toUpperCase(),box=document.getElementById("clientLookupResult");
   if(!id){box.textContent="Enter a Client ID.";return;}box.textContent="Searching...";
   const {data:profile,error}=await db.from("client_profiles").select("client_id,user_id,created_at").eq("client_id",id).maybeSingle();
@@ -1243,7 +1271,7 @@ async function adminFindClient(){
   [["Seller Listings",listings.data||[],"listing_tittle","price"],["Buyer Offers",buyerOffers.data||[],"listing_title","offered_price"],["Offers Received on Seller Listings",sellerOffers,"listing_title","offered_price"]].forEach(([label,items,name,amount])=>{const wrap=document.createElement("div");wrap.className="admin-result";const title=document.createElement("h4");title.textContent=label+" ("+items.length+")";wrap.appendChild(title);items.forEach(x=>{const p=document.createElement("p");p.textContent=(x[name]||"Record")+" | Rs. "+Number(x[amount]||0).toLocaleString("en-PK")+" | "+(x.status||"");wrap.appendChild(p);});box.appendChild(wrap);});
 }
 async function adminRecordIncome(){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const amount=Number(document.getElementById("incomeAmount").value),clientId=document.getElementById("incomeClientId").value.trim().toUpperCase()||null;
   if(!Number.isFinite(amount)||amount<=0){message("adminMessage","Enter a valid amount in PKR.","#b42318");return;}
   const payload={event_type:document.getElementById("incomeType").value,client_id:clientId,listing_id:document.getElementById("incomeListingId").value.trim()||null,amount,status:"approved",note:document.getElementById("incomeNote").value.trim()||"Admin-entered income"};
@@ -1251,7 +1279,7 @@ async function adminRecordIncome(){
   ["incomeAmount","incomeClientId","incomeListingId","incomeNote"].forEach(id=>document.getElementById(id).value="");message("adminMessage","Income record saved.","#12816f");await adminLoadDashboard();
 }
 async function adminApproveIncome(id){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const {data:event,error:readError}=await db.from("revenue_events").select("*").eq("id",id).single();if(readError){alert("Could not load request: "+readError.message);return;}
   const {error}=await db.from("revenue_events").update({status:"approved"}).eq("id",id);if(error){alert("Approval failed: "+error.message);return;}
   if(event.event_type==="featured_listing"&&event.listing_id){const expires=new Date(Date.now()+7*24*60*60*1000).toISOString();const {error:featureError}=await db.from("featured_listings").upsert({listing_id:String(event.listing_id),expires_at:expires});if(featureError)console.warn("Revenue approved but featured badge could not be activated:",featureError.message);}

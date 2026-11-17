@@ -675,8 +675,10 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
   <div class="contact-panel">
     <h4>Contact Us | ہم سے رابطہ کریں</h4>
     <div class="contact-row">
-      <div class="contact-item">✉️ Email: <strong><a href="mailto:arbab.khalidrasheed@gmail.com" style="color:inherit;text-decoration:underline">arbab.khalidrasheed@gmail.com</a></strong></div>
-      <div class="contact-item">🟢 WhatsApp: <strong><a href="https://wa.me/923094334302" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03094334302</a></strong></div>
+      <div class="contact-item">✉️ Email 1: <strong><a href="mailto:arbab.khalidrasheed@gmail.com" style="color:inherit;text-decoration:underline">arbab.khalidrasheed@gmail.com</a></strong></div>
+      <div class="contact-item">✉️ Email 2: <strong><a href="mailto:ammarkhalid620@gmail.com" style="color:inherit;text-decoration:underline">ammarkhalid620@gmail.com</a></strong></div>
+      <div class="contact-item">🟢 WhatsApp 1: <strong><a href="https://wa.me/923094334302" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03094334302</a></strong></div>
+      <div class="contact-item">🟢 WhatsApp 2: <strong><a href="https://wa.me/923360180181" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03360180181</a></strong></div>
     </div>
     <p class="small" style="color:#dce8f4;margin-top:10px">Contact us directly by email or WhatsApp. Buyer and seller private contact details remain hidden.</p>
   </div>
@@ -688,8 +690,8 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
 "use strict";
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
-// Admin access is controlled by public.profiles.is_admin in Supabase.
-const ADMIN_EMAILS = [];
+// Add the administrator login email here to enable admin deletion of every listing.
+const ADMIN_EMAILS = []; // Admin access is controlled by the client_profiles.is_admin flag in Supabase.
 function isCurrentAdmin(){return !!(currentClientProfile&&currentClientProfile.is_admin)||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||"").toLowerCase());}
 // Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
 // require a server-side function and are intentionally not claimed as active yet.
@@ -759,9 +761,9 @@ function updateUser(){
 async function loadClientProfile(){
   currentClientProfile=null;currentClientId=null;
   if(!currentUser||!db){updateUser();return;}
-  const {data,error}=await db.from("profiles").select("id,is_admin").eq("user_id",currentUser.id).maybeSingle();
+  const {data,error}=await db.from("client_profiles").select("client_id,is_admin").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.warn("Client profile not ready. Run the supplied SQL setup file.",error.message);updateUser();return;}
-  currentClientProfile=data||null;currentClientId=null;updateUser();
+  currentClientProfile=data||null;currentClientId=data?data.client_id:null;updateUser();
   if(data&&data.is_admin){await adminLoadDashboard();}
 }
 async function loadCategories(){

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#142b45">
 <meta name="description" content="A&K Fair Mart — a marketplace to buy and sell property, vehicles, electronics, furniture, fashion and services in Pakistan.">
-<meta name="version" content="2026.11.16-2">
+<meta name="version" content="2026.11.17-gallery-contact">
 <title>A&K FAIR MART | خرید و فروخت</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -355,6 +355,24 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 .photo-upload-list input{width:100%;font-size:12px}
 @media(max-width:520px){.photo-upload-list{grid-template-columns:1fr}}
 
+
+/* Advertisement detail popup and image gallery */
+body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);background-attachment:fixed}
+.ad{cursor:pointer}.ad .listing-image-gallery img{cursor:zoom-in}
+.detail-modal{display:none;position:fixed;inset:0;z-index:1200;background:rgba(5,18,32,.82);backdrop-filter:blur(8px);padding:16px;overflow:auto;align-items:center;justify-content:center}
+.detail-modal.open{display:flex}
+.detail-dialog{width:min(920px,100%);max-height:94vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 25px 80px #0005;text-align:left;position:relative;padding:20px}
+.detail-close{position:sticky;top:0;float:right;z-index:3;border:0;border-radius:50%;width:38px;height:38px;background:#142b45;color:white;font-size:23px;line-height:1}
+.detail-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:20px;clear:both}
+.detail-main-image{position:relative;background:#edf2f5;border-radius:14px;min-height:260px;display:grid;place-items:center;overflow:hidden}
+.detail-main-image img{width:100%;height:min(55vh,480px);object-fit:contain;display:block}
+.detail-arrow{position:absolute;top:50%;transform:translateY(-50%);border:0;border-radius:50%;width:42px;height:42px;background:#10243acc;color:white;font-size:26px;display:grid;place-items:center}
+.detail-arrow.prev{left:10px}.detail-arrow.next{right:10px}.detail-count{text-align:center;font-size:12px;color:#66788a;margin:7px}
+.detail-thumbs{display:flex;gap:8px;overflow:auto;padding:5px 1px}.detail-thumbs img{width:66px;height:58px;object-fit:cover;border-radius:8px;border:2px solid transparent;cursor:pointer;flex:none}.detail-thumbs img.active{border-color:#159b91}
+.detail-info h2{margin:4px 0 8px;color:#142b45}.detail-info p{line-height:1.6;overflow-wrap:anywhere}.detail-info .detail-price{font-size:23px;font-weight:900;color:#12816f}.detail-video{width:100%;max-height:300px;margin-top:12px;border-radius:12px;background:#111}
+.contact-panel{max-width:900px;margin:0 auto 20px;padding:18px;border:1px solid #ffffff40;border-radius:16px;background:#ffffff12}.contact-panel h4{margin:0 0 10px;color:#ffe08a;font-size:18px}.contact-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.contact-item{padding:9px 14px;border:1px solid #ffffff35;border-radius:12px;background:#ffffff0c;color:#f5fbff}
+@media(max-width:700px){.detail-layout{grid-template-columns:1fr}.detail-dialog{padding:14px}.detail-main-image{min-height:210px}.detail-main-image img{height:38vh}.detail-info h2{font-size:21px}}
+
 </style>
 </head>
 <body>
@@ -398,6 +416,7 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
   <a href="#categories" onclick="showPage('categories');return false">Categories | کیٹیگریز</a>
   <a href="#listings" onclick="showPage('listings');return false">Ads | اشتہارات</a>
   <a href="#account" onclick="showAccount();return false">Account | اکاؤنٹ</a>
+  <a href="#contactUs">Contact Us | رابطہ</a>
 </nav>
 
 <main>
@@ -610,6 +629,29 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
 </main>
 
 
+
+<div class="detail-modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" onclick="if(event.target===this)closeAdDetails()">
+  <div class="detail-dialog">
+    <button class="detail-close" type="button" aria-label="Close details" onclick="closeAdDetails()">×</button>
+    <div class="detail-layout">
+      <div class="detail-gallery">
+        <div class="detail-main-image" id="detailImageStage"><img id="detailMainImage" alt="Advertisement photo"></div>
+        <div class="detail-count" id="detailImageCount"></div>
+        <div class="detail-thumbs" id="detailThumbs"></div>
+      </div>
+      <div class="detail-info">
+        <h2 id="detailTitle">Advertisement details</h2>
+        <p class="detail-price" id="detailPrice"></p>
+        <p id="detailDescription"></p>
+        <p id="detailLocation"></p>
+        <p id="detailCategory"></p>
+        <div id="detailVideoWrap"></div>
+        <button class="btn teal" id="detailOfferButton" type="button">💬 Make an Offer / آفر دیں</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="offer-modal" id="offerModal" role="dialog" aria-modal="true" aria-labelledby="offerHeading">
   <div class="offer-dialog">
     <h2 id="offerHeading">Make an Offer | آفر دیں</h2>
@@ -625,11 +667,19 @@ footer h3{background:linear-gradient(90deg,#fff0b0,#50eee5);-webkit-background-c
   </div>
 </div>
 
-<footer>
+<footer id="contactUs">
   <h3>A&amp;K FAIR MART</h3>
   <p>By Ammar &amp; Khalid</p>
   <p>Buy Smart. Sell Easy.</p>
   <p class="urdu">سمجھداری سے خریدیں، آسانی سے فروخت کریں۔</p>
+  <div class="contact-panel">
+    <h4>Contact Us | ہم سے رابطہ کریں</h4>
+    <div class="contact-row">
+      <div class="contact-item">✉️ Email: <strong><a href="mailto:arbab.khalidrasheed@gmail.com" style="color:inherit;text-decoration:underline">arbab.khalidrasheed@gmail.com</a></strong></div>
+      <div class="contact-item">🟢 WhatsApp: <strong><a href="https://wa.me/923094334302" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03094334302</a></strong></div>
+    </div>
+    <p class="small" style="color:#dce8f4;margin-top:10px">Contact us directly by email or WhatsApp. Buyer and seller private contact details remain hidden.</p>
+  </div>
   <div class="footerline"></div>
   <p>© <span id="year"></span> A&amp;K FAIR MART. All rights reserved.</p>
 </footer>
@@ -1021,6 +1071,9 @@ function renderAds(ads){
   ads.forEach(ad=>{
     const card=document.createElement("article");
     card.className="ad";
+    card.setAttribute("role","button");card.setAttribute("tabindex","0");
+    card.addEventListener("click",(event)=>{if(!event.target.closest("button,a,input,video"))openAdDetails(ad);});
+    card.addEventListener("keydown",(event)=>{if((event.key==="Enter"||event.key===" ")&&event.target===card){event.preventDefault();openAdDetails(ad);}});
     const adImages=parseListingImages(ad.image_url);
     if(adImages.length){
       const gallery=document.createElement("div");gallery.className="listing-image-gallery";
@@ -1041,6 +1094,7 @@ function renderAds(ads){
     if(ad.is_featured===true){const ribbon=document.createElement("span");ribbon.className="premium-ribbon";ribbon.textContent="⭐ FEATURED";card.appendChild(ribbon);}
     const loc=document.createElement("p");
     loc.className="small";loc.textContent="📍 "+(ad.locations||"Location not specified");card.appendChild(loc);
+    const detailsButton=document.createElement("button");detailsButton.type="button";detailsButton.className="btn dark";detailsButton.style.cssText="width:100%;margin-top:8px";detailsButton.textContent="View Full Details / مکمل تفصیل";detailsButton.onclick=()=>openAdDetails(ad);card.appendChild(detailsButton);
     const offerButton=document.createElement("button");offerButton.type="button";offerButton.className="offer-btn";offerButton.textContent="💬 Make an Offer / آفر دیں";offerButton.onclick=()=>openOffer(ad);card.appendChild(offerButton);
     const isAdmin=currentUser && isCurrentAdmin();
     if(currentUser && (ad.user_id===currentUser.id || isAdmin)){
@@ -1064,6 +1118,44 @@ async function deleteAd(adId,ownerId){
   message("postMessage","Advertisement deleted successfully.","#12816f");
   await loadAds();
 }
+
+
+let activeDetailListing=null,activeDetailImages=[],activeDetailIndex=0;
+function openAdDetails(ad){
+  activeDetailListing=ad;
+  activeDetailImages=parseListingImages(ad.image_url)||[];
+  activeDetailIndex=0;
+  const modal=document.getElementById("detailModal");
+  document.getElementById("detailTitle").textContent=ad.listing_tittle||"Advertisement";
+  document.getElementById("detailPrice").textContent=ad.price!=null?"Rs. "+Number(ad.price).toLocaleString("en-PK"):"Contact for price";
+  document.getElementById("detailDescription").textContent=cleanListingDescription(ad.description||"")||"No description provided.";
+  document.getElementById("detailLocation").textContent="📍 Location: "+(ad.locations||"Not specified");
+  document.getElementById("detailCategory").textContent="Category: "+(ad.category||ad.categories||"Not specified");
+  const videoWrap=document.getElementById("detailVideoWrap");videoWrap.innerHTML="";
+  const videoUrl=parseListingVideo(ad.description||"");
+  if(videoUrl){const video=document.createElement("video");video.className="detail-video";video.controls=true;video.preload="metadata";video.src=videoUrl;videoWrap.appendChild(video);}
+  document.getElementById("detailOfferButton").onclick=()=>{closeAdDetails();openOffer(ad);};
+  renderDetailImage();
+  modal.classList.add("open");document.body.style.overflow="hidden";
+}
+function renderDetailImage(){
+  const stage=document.getElementById("detailImageStage"),thumbs=document.getElementById("detailThumbs"),count=document.getElementById("detailImageCount");
+  stage.innerHTML="";thumbs.innerHTML="";
+  if(activeDetailImages.length){
+    const image=document.createElement("img");image.id="detailMainImage";image.src=activeDetailImages[activeDetailIndex];image.alt="Advertisement photo "+(activeDetailIndex+1);stage.appendChild(image);
+    if(activeDetailImages.length>1){
+      const prev=document.createElement("button");prev.type="button";prev.className="detail-arrow prev";prev.setAttribute("aria-label","Previous photo");prev.textContent="‹";prev.onclick=()=>changeDetailImage(-1);stage.appendChild(prev);
+      const next=document.createElement("button");next.type="button";next.className="detail-arrow next";next.setAttribute("aria-label","Next photo");next.textContent="›";next.onclick=()=>changeDetailImage(1);stage.appendChild(next);
+    }
+    activeDetailImages.forEach((url,index)=>{const thumb=document.createElement("img");thumb.src=url;thumb.alt="Photo thumbnail "+(index+1);thumb.className=index===activeDetailIndex?"active":"";thumb.onclick=()=>{activeDetailIndex=index;renderDetailImage();};thumbs.appendChild(thumb);});
+    count.textContent="Photo "+(activeDetailIndex+1)+" of "+activeDetailImages.length;
+  }else{
+    const empty=document.createElement("div");empty.textContent="🛍️ No photos available";empty.style.cssText="padding:60px 10px;color:#64748b";stage.appendChild(empty);count.textContent="No photos";
+  }
+}
+function changeDetailImage(step){if(!activeDetailImages.length)return;activeDetailIndex=(activeDetailIndex+step+activeDetailImages.length)%activeDetailImages.length;renderDetailImage();}
+function closeAdDetails(){const modal=document.getElementById("detailModal");if(modal)modal.classList.remove("open");document.body.style.overflow="";activeDetailListing=null;}
+document.addEventListener("keydown",event=>{if(!document.getElementById("detailModal")?.classList.contains("open"))return;if(event.key==="Escape")closeAdDetails();if(event.key==="ArrowLeft")changeDetailImage(-1);if(event.key==="ArrowRight")changeDetailImage(1);});
 
 let selectedOfferListing=null;
 function openOffer(ad){

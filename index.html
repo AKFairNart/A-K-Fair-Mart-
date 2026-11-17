@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#142b45">
 <meta name="description" content="A&K Fair Mart — a marketplace to buy and sell property, vehicles, electronics, furniture, fashion and services in Pakistan.">
-<meta name="version" content="2026.11.17-admin-delete-fix">
+<meta name="version" content="2026.11.17-gallery-contact">
 <title>A&K FAIR MART | خرید و فروخت</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -675,10 +675,8 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
   <div class="contact-panel">
     <h4>Contact Us | ہم سے رابطہ کریں</h4>
     <div class="contact-row">
-      <div class="contact-item">✉️ Email 1: <strong><a href="mailto:arbab.khalidrasheed@gmail.com" style="color:inherit;text-decoration:underline">arbab.khalidrasheed@gmail.com</a></strong></div>
-      <div class="contact-item">✉️ Email 2: <strong><a href="mailto:ammarkhalid620@gmail.com" style="color:inherit;text-decoration:underline">ammarkhalid620@gmail.com</a></strong></div>
-      <div class="contact-item">🟢 WhatsApp 1: <strong><a href="https://wa.me/923094334302" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03094334302</a></strong></div>
-      <div class="contact-item">🟢 WhatsApp 2: <strong><a href="https://wa.me/923360180181" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:underline">03360180181</a></strong></div>
+      <div class="contact-item">✉️ Email: <strong><a href="mailto:arbab.khalidrasheed@gmail.com" style="color:inherit;text-decoration:underline">arbab.khalidrasheed@gmail.com</a></strong></div>
+      <div class="contact-item">🟢 WhatsApp: <strong><a href="https://wa.me/923094334302" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03094334302</a></strong></div>
     </div>
     <p class="small" style="color:#dce8f4;margin-top:10px">Contact us directly by email or WhatsApp. Buyer and seller private contact details remain hidden.</p>
   </div>
@@ -690,8 +688,8 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
 "use strict";
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
-// Add the administrator login email here to enable admin deletion of every listing.
-const ADMIN_EMAILS = ["arbab.khalidrasheed@gmail.com"]; // Admin login email; Supabase RLS must also grant admin delete permission.
+// Admin access is controlled by public.profiles.is_admin in Supabase.
+const ADMIN_EMAILS = [];
 function isCurrentAdmin(){return !!(currentClientProfile&&currentClientProfile.is_admin)||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||"").toLowerCase());}
 // Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
 // require a server-side function and are intentionally not claimed as active yet.
@@ -725,7 +723,7 @@ function showPage(page){
   if(page==="home"){if(hero)hero.style.display="block";window.scrollTo({top:0,behavior:"smooth"});return;}
   const target=document.getElementById(page);
   if(target)target.style.display="block";
-  if(page==="account"&&currentUser&&isCurrentAdmin()){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
+  if(page==="account"&&currentUser&&currentClientProfile&&currentClientProfile.is_admin){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
   if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
@@ -756,15 +754,15 @@ function updateUser(){
   const chip=document.getElementById("clientIdDisplay");
   if(chip){chip.style.display=currentUser&&currentClientId?"inline-flex":"none";chip.textContent=currentClientId?"Your permanent Client ID: "+currentClientId:"";}
   const panel=document.getElementById("adminPanel");
-  if(panel)panel.style.display=(currentUser&&isCurrentAdmin()&&document.getElementById("account")?.style.display==="block")?"block":"none";
+  if(panel)panel.style.display="none";
 }
 async function loadClientProfile(){
   currentClientProfile=null;currentClientId=null;
   if(!currentUser||!db){updateUser();return;}
-  const {data,error}=await db.from("client_profiles").select("client_id,is_admin").eq("user_id",currentUser.id).maybeSingle();
+  const {data,error}=await db.from("profiles").select("id,is_admin").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.warn("Client profile not ready. Run the supplied SQL setup file.",error.message);updateUser();return;}
-  currentClientProfile=data||null;currentClientId=data?data.client_id:null;updateUser();
-  if(isCurrentAdmin()){await adminLoadDashboard();}
+  currentClientProfile=data||null;currentClientId=null;updateUser();
+  if(data&&data.is_admin){await adminLoadDashboard();}
 }
 async function loadCategories(){
   const grid=document.getElementById("categoryGrid");
@@ -1113,25 +1111,12 @@ async function deleteAd(adId,ownerId){
   const isAdmin=isCurrentAdmin();
   if(ownerId!==currentUser.id && !isAdmin){alert("You can only delete your own advertisement.");return;}
   if(!confirm("Delete this advertisement permanently? / کیا آپ یہ اشتہار حذف کرنا چاہتے ہیں؟"))return;
-  try{
-    // Do not request returned rows: DELETE + SELECT can fail when SELECT RLS
-    // differs from DELETE RLS. Ask PostgREST for an exact affected-row count.
-    let query=db.from("listing").delete({count:"exact"}).eq("id",adId);
-    if(!isAdmin)query=query.eq("user_id",currentUser.id);
-    const {count,error}=await query;
-    if(error){
-      alert("اشتہار حذف نہیں ہوا۔\n\nSupabase Database نے اجازت نہیں دی: "+error.message+"\n\nSQL اجازت فعال کرنے کے لیے ساتھ دی گئی A-K-Fair-Mart-Admin-Delete-Policy.sql فائل Supabase Dashboard → SQL Editor میں چلائیں۔");
-      return;
-    }
-    if(count===0){
-      alert("اشتہار حذف نہیں ہوا۔ ممکن ہے پوسٹ پہلے حذف ہو چکی ہو، یا Supabase کی DELETE policy نے اس اکاؤنٹ کو اجازت نہ دی ہو۔\n\nA-K-Fair-Mart-Admin-Delete-Policy.sql کو Supabase SQL Editor میں چلائیں، پھر Admin اکاؤنٹ سے Logout کرکے دوبارہ Login کریں۔");
-      return;
-    }
-    message("postMessage","Advertisement deleted successfully.","#12816f");
-    await loadAds();
-  }catch(err){
-    alert("Delete failed: "+(err?.message||String(err)));
-  }
+  let query=db.from("listing").delete().eq("id",adId);
+  if(!isAdmin)query=query.eq("user_id",currentUser.id);
+  const {error}=await query;
+  if(error){alert("Delete failed: "+error.message+". Check listing DELETE RLS policy.");return;}
+  message("postMessage","Advertisement deleted successfully.","#12816f");
+  await loadAds();
 }
 
 
@@ -1229,7 +1214,7 @@ async function requestFeaturedListing(ad){
   alert("Featured Listing request submitted. Admin will confirm payment and activation.");
 }
 async function adminLoadDashboard(){
-  if(!isCurrentAdmin())return;
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
   const [income,pending,featured]=await Promise.all([
     db.from("revenue_events").select("amount").eq("status","approved"),
     db.from("revenue_events").select("id",{count:"exact",head:true}).eq("status","pending"),
@@ -1244,7 +1229,7 @@ async function adminLoadDashboard(){
   (rows||[]).forEach(row=>{const item=document.createElement("div");item.className="admin-result";const title=document.createElement("b");title.textContent=(row.event_type||"income").replaceAll("_"," ")+" — Rs. "+Number(row.amount||0).toLocaleString("en-PK");const detail=document.createElement("p");detail.textContent="Client: "+(row.client_id||"—")+" | Status: "+row.status+" | "+(row.note||"");item.append(title,detail);if(row.status==="pending"){const btn=document.createElement("button");btn.className="btn teal";btn.textContent="Approve payment";btn.onclick=()=>adminApproveIncome(row.id);item.appendChild(btn);}box.appendChild(item);});
 }
 async function adminFindClient(){
-  if(!isCurrentAdmin())return;
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
   const id=document.getElementById("clientLookupInput").value.trim().toUpperCase(),box=document.getElementById("clientLookupResult");
   if(!id){box.textContent="Enter a Client ID.";return;}box.textContent="Searching...";
   const {data:profile,error}=await db.from("client_profiles").select("client_id,user_id,created_at").eq("client_id",id).maybeSingle();
@@ -1256,7 +1241,7 @@ async function adminFindClient(){
   [["Seller Listings",listings.data||[],"listing_tittle","price"],["Buyer Offers",buyerOffers.data||[],"listing_title","offered_price"],["Offers Received on Seller Listings",sellerOffers,"listing_title","offered_price"]].forEach(([label,items,name,amount])=>{const wrap=document.createElement("div");wrap.className="admin-result";const title=document.createElement("h4");title.textContent=label+" ("+items.length+")";wrap.appendChild(title);items.forEach(x=>{const p=document.createElement("p");p.textContent=(x[name]||"Record")+" | Rs. "+Number(x[amount]||0).toLocaleString("en-PK")+" | "+(x.status||"");wrap.appendChild(p);});box.appendChild(wrap);});
 }
 async function adminRecordIncome(){
-  if(!isCurrentAdmin())return;
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
   const amount=Number(document.getElementById("incomeAmount").value),clientId=document.getElementById("incomeClientId").value.trim().toUpperCase()||null;
   if(!Number.isFinite(amount)||amount<=0){message("adminMessage","Enter a valid amount in PKR.","#b42318");return;}
   const payload={event_type:document.getElementById("incomeType").value,client_id:clientId,listing_id:document.getElementById("incomeListingId").value.trim()||null,amount,status:"approved",note:document.getElementById("incomeNote").value.trim()||"Admin-entered income"};
@@ -1264,7 +1249,7 @@ async function adminRecordIncome(){
   ["incomeAmount","incomeClientId","incomeListingId","incomeNote"].forEach(id=>document.getElementById(id).value="");message("adminMessage","Income record saved.","#12816f");await adminLoadDashboard();
 }
 async function adminApproveIncome(id){
-  if(!isCurrentAdmin())return;
+  if(!currentClientProfile||!currentClientProfile.is_admin)return;
   const {data:event,error:readError}=await db.from("revenue_events").select("*").eq("id",id).single();if(readError){alert("Could not load request: "+readError.message);return;}
   const {error}=await db.from("revenue_events").update({status:"approved"}).eq("id",id);if(error){alert("Approval failed: "+error.message);return;}
   if(event.event_type==="featured_listing"&&event.listing_id){const expires=new Date(Date.now()+7*24*60*60*1000).toISOString();const {error:featureError}=await db.from("featured_listings").upsert({listing_id:String(event.listing_id),expires_at:expires});if(featureError)console.warn("Revenue approved but featured badge could not be activated:",featureError.message);}

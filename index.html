@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#142b45">
 <meta name="description" content="A&K Fair Mart — a marketplace to buy and sell property, vehicles, electronics, furniture, fashion and services in Pakistan.">
-<meta name="version" content="2026.11.17-gallery-contact">
+<meta name="version" content="2026.11.17-admin-delete-fix">
 <title>A&K FAIR MART | خرید و فروخت</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -678,7 +678,7 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
       <div class="contact-item">✉️ Email 1: <strong><a href="mailto:arbab.khalidrasheed@gmail.com" style="color:inherit;text-decoration:underline">arbab.khalidrasheed@gmail.com</a></strong></div>
       <div class="contact-item">✉️ Email 2: <strong><a href="mailto:ammarkhalid620@gmail.com" style="color:inherit;text-decoration:underline">ammarkhalid620@gmail.com</a></strong></div>
       <div class="contact-item">🟢 WhatsApp 1: <strong><a href="https://wa.me/923094334302" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">03094334302</a></strong></div>
-      <div class="contact-item">🟢 WhatsApp 2: <strong><a href="https://wa.me/923360180181" target="_blank" rel="noopener noreferrer">03360180181</a></strong></div>
+      <div class="contact-item">🟢 WhatsApp 2: <strong><a href="https://wa.me/923360180181" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:underline">03360180181</a></strong></div>
     </div>
     <p class="small" style="color:#dce8f4;margin-top:10px">Contact us directly by email or WhatsApp. Buyer and seller private contact details remain hidden.</p>
   </div>
@@ -1114,32 +1114,17 @@ async function deleteAd(adId,ownerId){
   if(ownerId!==currentUser.id && !isAdmin){alert("You can only delete your own advertisement.");return;}
   if(!confirm("Delete this advertisement permanently? / کیا آپ یہ اشتہار حذف کرنا چاہتے ہیں؟"))return;
   try{
-    let query=db.from("listing").delete().eq("id",adId).select("id");
+    // Do not request returned rows: DELETE + SELECT can fail when SELECT RLS
+    // differs from DELETE RLS. Ask PostgREST for an exact affected-row count.
+    let query=db.from("listing").delete({count:"exact"}).eq("id",adId);
     if(!isAdmin)query=query.eq("user_id",currentUser.id);
-    const {data,error}=await query;
+    const {count,error}=await query;
     if(error){
-      alert("اشتہار حذف نہیں ہوا۔\n\nDatabase permission error: "+error.message+"\n\nSupabase میں listing table کے لیے DELETE policy فعال کرنا ضروری ہے۔");
+      alert("اشتہار حذف نہیں ہوا۔\n\nSupabase Database نے اجازت نہیں دی: "+error.message+"\n\nSQL اجازت فعال کرنے کے لیے ساتھ دی گئی A-K-Fair-Mart-Admin-Delete-Policy.sql فائل Supabase Dashboard → SQL Editor میں چلائیں۔");
       return;
     }
-    if(!data || data.length===0){
-      alert(`اشتہار حذف نہیں ہوا کیونکہ Supabase نے DELETE کی اجازت نہیں دی۔
-
-اپنے Supabase Dashboard → SQL Editor میں یہ SQL چلائیں:
-
-update public.client_profiles cp
-set is_admin = true
-from auth.users u
-where cp.user_id = u.id
-  and lower(u.email) = lower('arbab.khalidrasheed@gmail.com');
-
-create policy "Admins can delete any listing" on public.listing
-for delete to authenticated
-using (exists (
-  select 1 from public.client_profiles cp
-  where cp.user_id = auth.uid() and cp.is_admin = true
-));
-
-اس کے بعد Admin اکاؤنٹ سے دوبارہ Login کریں۔`);
+    if(count===0){
+      alert("اشتہار حذف نہیں ہوا۔ ممکن ہے پوسٹ پہلے حذف ہو چکی ہو، یا Supabase کی DELETE policy نے اس اکاؤنٹ کو اجازت نہ دی ہو۔\n\nA-K-Fair-Mart-Admin-Delete-Policy.sql کو Supabase SQL Editor میں چلائیں، پھر Admin اکاؤنٹ سے Logout کرکے دوبارہ Login کریں۔");
       return;
     }
     message("postMessage","Advertisement deleted successfully.","#12816f");

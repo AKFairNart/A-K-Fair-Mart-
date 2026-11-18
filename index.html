@@ -725,7 +725,7 @@ function showPage(page){
   if(page==="home"){if(hero)hero.style.display="block";window.scrollTo({top:0,behavior:"smooth"});return;}
   const target=document.getElementById(page);
   if(target)target.style.display="block";
-  if(page==="account"&&currentUser&&currentClientProfile&&currentClientProfile.is_admin){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
+  if(page==="account"&&currentUser&&isCurrentAdmin()){const panel=document.getElementById("adminPanel");if(panel)panel.style.display="block";}
   if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
@@ -756,7 +756,7 @@ function updateUser(){
   const chip=document.getElementById("clientIdDisplay");
   if(chip){chip.style.display=currentUser&&currentClientId?"inline-flex":"none";chip.textContent=currentClientId?"Your permanent Client ID: "+currentClientId:"";}
   const panel=document.getElementById("adminPanel");
-  if(panel)panel.style.display="none";
+  if(panel)panel.style.display=(currentUser&&isCurrentAdmin())?"block":"none";
 }
 async function loadClientProfile(){
   currentClientProfile=null;currentClientId=null;
@@ -764,7 +764,7 @@ async function loadClientProfile(){
   const {data,error}=await db.from("client_profiles").select("client_id,is_admin").eq("user_id",currentUser.id).maybeSingle();
   if(error){console.warn("Client profile not ready. Run the supplied SQL setup file.",error.message);updateUser();return;}
   currentClientProfile=data||null;currentClientId=data?data.client_id:null;updateUser();
-  if(data&&data.is_admin){await adminLoadDashboard();}
+  if(isCurrentAdmin()){await adminLoadDashboard();}
 }
 async function loadCategories(){
   const grid=document.getElementById("categoryGrid");
@@ -1216,7 +1216,7 @@ async function requestFeaturedListing(ad){
   alert("Featured Listing request submitted. Admin will confirm payment and activation.");
 }
 async function adminLoadDashboard(){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const [income,pending,featured]=await Promise.all([
     db.from("revenue_events").select("amount").eq("status","approved"),
     db.from("revenue_events").select("id",{count:"exact",head:true}).eq("status","pending"),
@@ -1231,7 +1231,7 @@ async function adminLoadDashboard(){
   (rows||[]).forEach(row=>{const item=document.createElement("div");item.className="admin-result";const title=document.createElement("b");title.textContent=(row.event_type||"income").replaceAll("_"," ")+" — Rs. "+Number(row.amount||0).toLocaleString("en-PK");const detail=document.createElement("p");detail.textContent="Client: "+(row.client_id||"—")+" | Status: "+row.status+" | "+(row.note||"");item.append(title,detail);if(row.status==="pending"){const btn=document.createElement("button");btn.className="btn teal";btn.textContent="Approve payment";btn.onclick=()=>adminApproveIncome(row.id);item.appendChild(btn);}box.appendChild(item);});
 }
 async function adminFindClient(){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const id=document.getElementById("clientLookupInput").value.trim().toUpperCase(),box=document.getElementById("clientLookupResult");
   if(!id){box.textContent="Enter a Client ID.";return;}box.textContent="Searching...";
   const {data:profile,error}=await db.from("client_profiles").select("client_id,user_id,created_at").eq("client_id",id).maybeSingle();
@@ -1243,7 +1243,7 @@ async function adminFindClient(){
   [["Seller Listings",listings.data||[],"listing_tittle","price"],["Buyer Offers",buyerOffers.data||[],"listing_title","offered_price"],["Offers Received on Seller Listings",sellerOffers,"listing_title","offered_price"]].forEach(([label,items,name,amount])=>{const wrap=document.createElement("div");wrap.className="admin-result";const title=document.createElement("h4");title.textContent=label+" ("+items.length+")";wrap.appendChild(title);items.forEach(x=>{const p=document.createElement("p");p.textContent=(x[name]||"Record")+" | Rs. "+Number(x[amount]||0).toLocaleString("en-PK")+" | "+(x.status||"");wrap.appendChild(p);});box.appendChild(wrap);});
 }
 async function adminRecordIncome(){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const amount=Number(document.getElementById("incomeAmount").value),clientId=document.getElementById("incomeClientId").value.trim().toUpperCase()||null;
   if(!Number.isFinite(amount)||amount<=0){message("adminMessage","Enter a valid amount in PKR.","#b42318");return;}
   const payload={event_type:document.getElementById("incomeType").value,client_id:clientId,listing_id:document.getElementById("incomeListingId").value.trim()||null,amount,status:"approved",note:document.getElementById("incomeNote").value.trim()||"Admin-entered income"};
@@ -1251,7 +1251,7 @@ async function adminRecordIncome(){
   ["incomeAmount","incomeClientId","incomeListingId","incomeNote"].forEach(id=>document.getElementById(id).value="");message("adminMessage","Income record saved.","#12816f");await adminLoadDashboard();
 }
 async function adminApproveIncome(id){
-  if(!currentClientProfile||!currentClientProfile.is_admin)return;
+  if(!isCurrentAdmin())return;
   const {data:event,error:readError}=await db.from("revenue_events").select("*").eq("id",id).single();if(readError){alert("Could not load request: "+readError.message);return;}
   const {error}=await db.from("revenue_events").update({status:"approved"}).eq("id",id);if(error){alert("Approval failed: "+error.message);return;}
   if(event.event_type==="featured_listing"&&event.listing_id){const expires=new Date(Date.now()+7*24*60*60*1000).toISOString();const {error:featureError}=await db.from("featured_listings").upsert({listing_id:String(event.listing_id),expires_at:expires});if(featureError)console.warn("Revenue approved but featured badge could not be activated:",featureError.message);}

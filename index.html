@@ -690,8 +690,8 @@ body{background:linear-gradient(135deg,#fbfdff 0%,#f2fbfa 52%,#fffdf6 100%);back
 "use strict";
 const SUPABASE_URL = "https://lquonluzxuivvzrdiipc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gwBu5OE9UQe351h24aM75Q_C-W6L1ch";
-// Add the administrator login email here to enable admin deletion of every listing.
-const ADMIN_EMAILS = []; // Admin access is controlled by the client_profiles.is_admin flag in Supabase.
+// Admin can edit/delete every listing. Keep this email in sync with the Supabase RLS SQL policy.
+const ADMIN_EMAILS = ["arbab.khalidrasheed@gmail.com"];
 function isCurrentAdmin(){return !!(currentClientProfile&&currentClientProfile.is_admin)||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||"").toLowerCase());}
 // Offers are stored directly in the Supabase offers table. Email/WhatsApp alerts
 // require a server-side function and are intentionally not claimed as active yet.
